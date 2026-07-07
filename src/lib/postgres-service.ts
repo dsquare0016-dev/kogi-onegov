@@ -3268,8 +3268,8 @@ export const dbGetInfrastructureMetrics = createServerFn({ method: "GET" })
 
       return {
         dbStatus: 'Healthy',
-        dbName: 'kogi_erp_test',
-        dbHost: '127.0.0.1:5432',
+        dbName: process.env.POSTGRES_DB || 'Primary Database',
+        dbHost: process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL).hostname : 'Database Host',
         latency: `${latencyMs}ms`,
         totalRecords,
         storageUsed: `${sizeStr} / 10 GB`,
@@ -3280,8 +3280,8 @@ export const dbGetInfrastructureMetrics = createServerFn({ method: "GET" })
       console.error("dbGetInfrastructureMetrics error:", err);
       return {
         dbStatus: 'Degraded',
-        dbName: 'kogi_erp_test',
-        dbHost: '127.0.0.1:5432',
+        dbName: process.env.POSTGRES_DB || 'Primary Database',
+        dbHost: process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL).hostname : 'Database Host',
         latency: 'timeout',
         totalRecords: 0,
         storageUsed: 'Unknown / 10 GB',
@@ -3916,9 +3916,9 @@ export const dbGetDatabaseDiagnostics = createServerFn({ method: "GET" })
 
       return {
         status: 'connected',
-        host: '127.0.0.1',
-        port: 5432,
-        database: 'kogi_erp_test',
+        host: process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL).hostname : 'Database Host',
+        port: process.env.DATABASE_URL ? parseInt(new URL(process.env.DATABASE_URL).port || '5432') : 5432,
+        database: process.env.POSTGRES_DB || 'Primary Database',
         role: roleRow.db_role,
         pgVersion: versionRow.pg_version,
         dbSize: sizeRow.db_size,
@@ -3934,8 +3934,8 @@ export const dbGetDatabaseDiagnostics = createServerFn({ method: "GET" })
       return {
         status: 'error',
         error: err.message,
-        host: '127.0.0.1',
-        database: 'kogi_erp_test',
+        host: process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL).hostname : 'Database Host',
+        database: process.env.POSTGRES_DB || 'Primary Database',
         tables: []
       };
     }
