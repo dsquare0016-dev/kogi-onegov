@@ -27,6 +27,21 @@ export function ChatbotWidget() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [mainLogo, setMainLogo] = useState('/kogi-logo.png');
+  const [gduLogo, setGduLogo] = useState('/gdu-logo.png');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const getStoredLogos = () => {
+        setMainLogo(localStorage.getItem('gdu_main_logo') || '/kogi-logo.png');
+        setGduLogo(localStorage.getItem('gdu_gdu_logo') || '/gdu-logo.png');
+      };
+      getStoredLogos();
+      window.addEventListener('siteConfigUpdate', getStoredLogos);
+      return () => window.removeEventListener('siteConfigUpdate', getStoredLogos);
+    }
+  }, []);
+
   const [mode, setMode] = useState<'details' | 'issue' | 'chat'>('details');
   const [emailInput, setEmailInput] = useState('');
   const [issueCategory, setIssueCategory] = useState('');
@@ -146,13 +161,77 @@ export function ChatbotWidget() {
 
   if (!isOpen) {
     return (
-      <button 
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-[9999] size-14 bg-gradient-to-tr from-indigo-600 to-cyan-500 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform duration-300 group"
-      >
-        <Sparkles className="absolute top-2 right-2 size-3 text-white/70 animate-pulse" />
-        <Bot className="size-6 text-white group-hover:animate-bounce" />
-      </button>
+      <>
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes slow-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          .animate-slow-spin {
+            animation: slow-spin 25s linear infinite;
+          }
+          @keyframes chatbot-bubble {
+            0% {
+              transform: translate(-50%, -50%) translate(0, 0) scale(0.4);
+              opacity: 0;
+            }
+            15% {
+              opacity: 0.7;
+            }
+            85% {
+              opacity: 0.4;
+            }
+            100% {
+              transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) scale(1.3);
+              opacity: 0;
+            }
+          }
+          .chatbot-bubble-particle {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 70%, rgba(255,255,255,0) 100%);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: inset 0 0 4px rgba(255,255,255,0.6);
+            pointer-events: none;
+            animation: chatbot-bubble var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+          }
+        `}} />
+        <button 
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 z-[9999] size-14 bg-white border border-[#C5A059]/40 rounded-full shadow-[0_4px_25px_rgba(0,0,0,0.15)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group hover:shadow-[0_4px_30px_rgba(197,160,89,0.3)]"
+        >
+          {/* Bubbles */}
+          <div className="absolute inset-0 pointer-events-none rounded-full overflow-visible">
+            <div className="chatbot-bubble-particle" style={{ '--dx': '-24px', '--dy': '-24px', '--duration': '3.2s', '--delay': '0s', 'width': '8px', 'height': '8px' } as any} />
+            <div className="chatbot-bubble-particle" style={{ '--dx': '24px', '--dy': '-28px', '--duration': '3.8s', '--delay': '0.6s', 'width': '11px', 'height': '11px' } as any} />
+            <div className="chatbot-bubble-particle" style={{ '--dx': '-28px', '--dy': '20px', '--duration': '4.2s', '--delay': '1.2s', 'width': '7px', 'height': '7px' } as any} />
+            <div className="chatbot-bubble-particle" style={{ '--dx': '20px', '--dy': '24px', '--duration': '3.0s', '--delay': '1.8s', 'width': '10px', 'height': '10px' } as any} />
+            <div className="chatbot-bubble-particle" style={{ '--dx': '-10px', '--dy': '-36px', '--duration': '3.5s', '--delay': '2.4s', 'width': '6px', 'height': '6px' } as any} />
+            <div className="chatbot-bubble-particle" style={{ '--dx': '30px', '--dy': '-10px', '--duration': '4.0s', '--delay': '3.0s', 'width': '12px', 'height': '12px' } as any} />
+          </div>
+
+          {/* Kogi Logo with Slow Spin */}
+          <div className="size-11 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-sm border border-muted/50 animate-slow-spin">
+            <img 
+              src={mainLogo} 
+              alt="Kogi State Logo" 
+              className="w-full h-full object-contain rounded-full" 
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
+          </div>
+
+          {/* Notification Badge */}
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 z-[10000]">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 text-[9px] font-black text-white items-center justify-center">1</span>
+          </span>
+        </button>
+      </>
     );
   }
 
@@ -170,8 +249,8 @@ export function ChatbotWidget() {
       >
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="size-8 bg-gradient-to-tr from-indigo-600 to-cyan-500 rounded-full flex items-center justify-center">
-              <Bot className="size-4 text-white" />
+            <div className="size-8 rounded-full overflow-hidden border border-border/40 bg-white flex items-center justify-center shadow-sm">
+              <img src={gduLogo} alt="GDU Logo" className="w-full h-full object-contain" />
             </div>
             <div className="absolute -bottom-1 -right-1 size-3 bg-emerald-500 rounded-full border-2 border-background"></div>
           </div>
@@ -295,8 +374,8 @@ export function ChatbotWidget() {
                           </div>
                         ) : (
                           <div className="flex items-start gap-2 max-w-[85%]">
-                            <div className={`size-6 shrink-0 rounded-full flex items-center justify-center mt-1 ${msg.sender_type === 'system' ? 'bg-amber-500' : 'bg-gradient-to-tr from-indigo-600 to-cyan-500'}`}>
-                              <Bot className="size-3 text-white" />
+                            <div className="size-6 shrink-0 rounded-full border border-border/40 bg-white flex items-center justify-center overflow-hidden mt-1 shadow-sm">
+                              <img src={gduLogo} alt="GDU Logo" className="w-full h-full object-contain" />
                             </div>
                             <div className="space-y-1">
                               <span className="text-[10px] text-muted-foreground ml-1 font-semibold">{msg.sender_type === 'system' ? 'System' : 'Support Desk'}</span>
