@@ -237,7 +237,7 @@ export const saveOrganizationRecord = createServerFn({ method: "POST" })
           UPDATE organizations
           SET name = ${data.name},
               short_name = ${data.short_name || null},
-              type = ${type}::user_defined,
+              type = ${type},
               code = ${data.code || null},
               description = ${data.description || null},
               mandate = ${data.mandate || null},
@@ -259,7 +259,7 @@ export const saveOrganizationRecord = createServerFn({ method: "POST" })
           INSERT INTO organizations (
             name, short_name, type, code, description, mandate, address, email, phone, website, lga, is_standalone, is_active, parent_id
           ) VALUES (
-            ${data.name}, ${data.short_name || null}, ${type}::user_defined, ${data.code || null}, ${data.description || null}, ${data.mandate || null}, ${data.address || null}, ${data.email || null}, ${data.phone || null}, ${data.website || null}, ${data.lga || null}, ${isStandalone}, ${isActive}, ${parentId}
+            ${data.name}, ${data.short_name || null}, ${type}, ${data.code || null}, ${data.description || null}, ${data.mandate || null}, ${data.address || null}, ${data.email || null}, ${data.phone || null}, ${data.website || null}, ${data.lga || null}, ${isStandalone}, ${isActive}, ${parentId}
           )
           RETURNING id
         `;
@@ -725,7 +725,7 @@ export const dbSaveBudgetLine = createServerFn({ method: "POST" })
             INSERT INTO budgets (
               organization_id, title, budget_type, total_allocated, status
             ) VALUES (
-              ${data.organization_id}, 'Annual Budget', 'capital'::user_defined, 0, 'draft'::user_defined
+              ${data.organization_id}, 'Annual Budget', 'capital', 0, 'draft'
             )
             RETURNING id
           `;
@@ -753,7 +753,7 @@ export const dbSaveBudgetLine = createServerFn({ method: "POST" })
           INSERT INTO budget_lines (
             budget_id, code, title, description, line_type, allocated_amount, committed_amount, released_amount, spent_amount, balance_amount
           ) VALUES (
-            ${budgetId}, ${data.code}, ${data.title}, ${data.description || null}, 'capital'::user_defined, ${data.allocated_amount || 0}, ${data.committed_amount || 0}, ${data.released_amount || 0}, ${data.spent_amount || 0}, ${data.balance_amount || 0}
+            ${budgetId}, ${data.code}, ${data.title}, ${data.description || null}, 'capital', ${data.allocated_amount || 0}, ${data.committed_amount || 0}, ${data.released_amount || 0}, ${data.spent_amount || 0}, ${data.balance_amount || 0}
           )
           RETURNING id
         `;
@@ -888,7 +888,7 @@ export const dbSaveWorkItem = createServerFn({ method: "POST" })
             INSERT INTO programmes (
               organization_id, development_goal_id, title, description, estimated_amount, start_date, end_date, status, workflow_status
             ) VALUES (
-              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${amount}, ${start}, ${end}, 'active'::user_defined, 'approved'::user_defined
+              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${amount}, ${start}, ${end}, 'active', 'approved'
             )
             RETURNING id
           `;
@@ -916,7 +916,7 @@ export const dbSaveWorkItem = createServerFn({ method: "POST" })
             INSERT INTO projects (
               organization_id, development_goal_id, title, description, location, lga, estimated_amount, progress_percentage, start_date, end_date, status, workflow_status
             ) VALUES (
-              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${rec.location || null}, ${rec.lga || null}, ${amount}, ${rec.progress_percentage || 0}, ${start}, ${end}, 'active'::user_defined, 'approved'::user_defined
+              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${rec.location || null}, ${rec.lga || null}, ${amount}, ${rec.progress_percentage || 0}, ${start}, ${end}, 'active', 'approved'
             )
             RETURNING id
           `;
@@ -941,7 +941,7 @@ export const dbSaveWorkItem = createServerFn({ method: "POST" })
             INSERT INTO activities (
               organization_id, development_goal_id, title, description, estimated_amount, progress_percentage, start_date, end_date, status, workflow_status
             ) VALUES (
-              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${amount}, ${rec.progress_percentage || 0}, ${start}, ${end}, 'active'::user_defined, 'approved'::user_defined
+              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${amount}, ${rec.progress_percentage || 0}, ${start}, ${end}, 'active', 'approved'
             )
             RETURNING id
           `;
@@ -965,7 +965,7 @@ export const dbSaveWorkItem = createServerFn({ method: "POST" })
             INSERT INTO tasks (
               organization_id, development_goal_id, title, description, progress_percentage, due_date, status, workflow_status
             ) VALUES (
-              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${rec.progress_percentage || 0}, ${end}, 'pending'::user_defined, 'approved'::user_defined
+              ${orgId}, ${goalId}, ${rec.title}, ${rec.description || null}, ${rec.progress_percentage || 0}, ${end}, 'pending', 'approved'
             )
             RETURNING id
           `;
@@ -1817,7 +1817,7 @@ async function triggerApprovalSideEffects(sqlTrans: any, approval: any, approver
   } else if (sourceType === 'memo') {
     await sqlTrans`
       UPDATE memos
-      SET status = 'approved'::user_defined, updated_at = NOW()
+      SET status = 'approved', updated_at = NOW()
       WHERE id = ${sourceId}
     `;
   }
@@ -2115,8 +2115,8 @@ export const dbSavePostgresMemo = createServerFn({ method: "POST" })
             UPDATE memos
             SET subject = ${data.subject},
                 body = ${data.body},
-                priority = ${data.priority || 'normal'}::user_defined,
-                status = ${data.status || 'draft'}::user_defined,
+                priority = ${data.priority || 'normal'},
+                status = ${data.status || 'draft'},
                 to_user_id = ${toUserId},
                 updated_at = NOW()
             WHERE id = ${memoId}
@@ -2127,7 +2127,7 @@ export const dbSavePostgresMemo = createServerFn({ method: "POST" })
               memo_no, subject, body, priority, status, from_user_id, to_user_id
             ) VALUES (
               ${data.ref || 'MEMO-' + Date.now()}, ${data.subject}, ${data.body}, 
-              ${data.priority || 'normal'}::user_defined, ${data.status || 'draft'}::user_defined, 
+              ${data.priority || 'normal'}, ${data.status || 'draft'}, 
               ${fromUserId}, ${toUserId}
             )
             RETURNING id
@@ -5441,6 +5441,199 @@ export const dbUpdateConversationStatus = createServerFn({ method: "POST" })
       `;
       return updated;
     } catch (e) { return null; }
+  });
+
+// =====================================================================
+// GDU MASTER OVERRIDE & SYSTEM DELEGATIONS
+// =====================================================================
+
+export const dbGetSystemLock = createServerFn({ method: "GET" })
+  .validator((d: any) => d)
+  .handler(async () => {
+    try {
+      const [lock] = await sql`SELECT is_locked FROM system_locks LIMIT 1`;
+      return { isLocked: !!lock?.is_locked };
+    } catch (err) {
+      console.error("dbGetSystemLock error:", err);
+      return { isLocked: false };
+    }
+  });
+
+export const dbToggleSystemLock = createServerFn({ method: "POST" })
+  .validator((data: { isLocked: boolean; userId?: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      // check if row exists
+      const [lock] = await sql`SELECT id FROM system_locks LIMIT 1`;
+      if (lock) {
+        await sql`
+          UPDATE system_locks SET
+            is_locked = ${data.isLocked},
+            locked_by = ${data.userId ?? null},
+            locked_at = ${data.isLocked ? sql`NOW()` : null}
+          WHERE id = ${lock.id}
+        `;
+      } else {
+        await sql`
+          INSERT INTO system_locks (is_locked, locked_by, locked_at)
+          VALUES (${data.isLocked}, ${data.userId ?? null}, ${data.isLocked ? sql`NOW()` : null})
+        `;
+      }
+      return { success: true };
+    } catch (err: any) {
+      console.error("dbToggleSystemLock error:", err);
+      throw new Error("Failed to update system lock state: " + err.message);
+    }
+  });
+
+export const dbChangeMasterPassword = createServerFn({ method: "POST" })
+  .validator((data: { newPass: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      const crypto = await import('crypto');
+      const hash = 'sha256:' + crypto.createHash('sha256').update(data.newPass).digest('hex');
+      
+      // 1. Update user Table for dg.gdu@kogistate.gov.ng / dg@kogistate.gov.ng if they exist
+      await sql`
+        UPDATE users SET password_hash = ${hash}
+        WHERE email = 'dg.gdu@kogistate.gov.ng' OR email = 'dg@kogistate.gov.ng'
+      `;
+      
+      // 2. Update master_override_settings
+      const [override] = await sql`SELECT id FROM master_override_settings LIMIT 1`;
+      if (override) {
+        await sql`
+          UPDATE master_override_settings SET
+            master_password_hash = ${hash},
+            updated_at = NOW()
+          WHERE id = ${override.id}
+        `;
+      } else {
+        await sql`
+          INSERT INTO master_override_settings (master_password_hash)
+          VALUES (${hash})
+        `;
+      }
+      return { success: true };
+    } catch (err: any) {
+      console.error("dbChangeMasterPassword error:", err);
+      throw new Error("Failed to change master password: " + err.message);
+    }
+  });
+
+export const dbGetDelegatedAdmins = createServerFn({ method: "GET" })
+  .validator((d: any) => d)
+  .handler(async () => {
+    try {
+      const rows = await sql`
+        SELECT dsa.id as delegation_id, u.id as user_id, u.email, u.display_name, dsa.assigned_at
+        FROM delegated_super_admins dsa
+        JOIN users u ON dsa.user_id = u.id
+        ORDER BY dsa.assigned_at DESC
+      `;
+      return rows;
+    } catch (err) {
+      console.error("dbGetDelegatedAdmins error:", err);
+      return [];
+    }
+  });
+
+export const dbGetEligibleUsersForDelegation = createServerFn({ method: "GET" })
+  .validator((d: any) => d)
+  .handler(async () => {
+    try {
+      const rows = await sql`
+        SELECT u.id, u.email, u.display_name
+        FROM users u
+        WHERE u.email NOT IN ('dg.gdu@kogistate.gov.ng', 'dg@kogistate.gov.ng', 'governor@kogistate.gov.ng', 'superadmin@kogistate.gov.ng')
+        AND u.id NOT IN (SELECT user_id FROM delegated_super_admins)
+        ORDER BY u.display_name ASC
+      `;
+      return rows;
+    } catch (err) {
+      console.error("dbGetEligibleUsersForDelegation error:", err);
+      return [];
+    }
+  });
+
+export const dbDelegateSuperAdmin = createServerFn({ method: "POST" })
+  .validator((data: { userId: string; delegatedBy?: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      await sql.begin(async sqlTrans => {
+        // 1. Insert into delegated_super_admins
+        await sqlTrans`
+          INSERT INTO delegated_super_admins (user_id, delegated_by)
+          VALUES (${data.userId}, ${data.delegatedBy ?? null})
+          ON CONFLICT (user_id) DO NOTHING
+        `;
+        
+        // 2. Fetch the super_admin role ID
+        const [roleRow] = await sqlTrans`SELECT id FROM roles WHERE name = 'super_admin' LIMIT 1`;
+        if (roleRow) {
+          // Update or insert into user_roles
+          const [urRow] = await sqlTrans`
+            SELECT id FROM user_roles 
+            WHERE user_id = ${data.userId} AND role_id = ${roleRow.id}
+            LIMIT 1
+          `;
+          if (!urRow) {
+            await sqlTrans`
+              INSERT INTO user_roles (user_id, role_id, is_active, assigned_at)
+              VALUES (${data.userId}, ${roleRow.id}, true, NOW())
+            `;
+          }
+        }
+      });
+      return { success: true };
+    } catch (err: any) {
+      console.error("dbDelegateSuperAdmin error:", err);
+      throw new Error("Failed to delegate super admin role: " + err.message);
+    }
+  });
+
+export const dbRevokeSuperAdmin = createServerFn({ method: "POST" })
+  .validator((data: { userId: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      await sql.begin(async sqlTrans => {
+        // 1. Delete from delegated_super_admins
+        await sqlTrans`
+          DELETE FROM delegated_super_admins WHERE user_id = ${data.userId}
+        `;
+        
+        // 2. Fetch the super_admin and staff role IDs
+        const [superAdminRole] = await sqlTrans`SELECT id FROM roles WHERE name = 'super_admin' LIMIT 1`;
+        const [staffRole] = await sqlTrans`SELECT id FROM roles WHERE name = 'staff' LIMIT 1`;
+        
+        if (superAdminRole) {
+          // Remove super_admin role
+          await sqlTrans`
+            DELETE FROM user_roles 
+            WHERE user_id = ${data.userId} AND role_id = ${superAdminRole.id}
+          `;
+          
+          if (staffRole) {
+            // Add standard staff role back
+            const [existStaff] = await sqlTrans`
+              SELECT id FROM user_roles 
+              WHERE user_id = ${data.userId} AND role_id = ${staffRole.id}
+              LIMIT 1
+            `;
+            if (!existStaff) {
+              await sqlTrans`
+                INSERT INTO user_roles (user_id, role_id, is_active, assigned_at)
+                VALUES (${data.userId}, ${staffRole.id}, true, NOW())
+              `;
+            }
+          }
+        }
+      });
+      return { success: true };
+    } catch (err: any) {
+      console.error("dbRevokeSuperAdmin error:", err);
+      throw new Error("Failed to revoke super admin delegation: " + err.message);
+    }
   });
 
 

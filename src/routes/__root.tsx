@@ -14,8 +14,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { GlobalAlertModal } from "@/components/GlobalAlertModal";
 import { useState } from "react";
-import { getSession } from "@/lib/auth";
-import { AlertTriangle, Terminal, ChevronDown, ChevronUp } from "lucide-react";
+import { getSession, signOut } from "@/lib/auth";
+import { AlertTriangle, Terminal, ChevronDown, ChevronUp, PowerOff } from "lucide-react";
 import { GduKogiLoader } from "@/components/GduKogiLoader";
 import { CustomSystemModal } from "@/components/CustomSystemModal";
 import { customAlert } from "@/lib/customModal";
@@ -193,6 +193,15 @@ function RootComponent() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
+  // Branding States
+  const [primaryColor, setPrimaryColor] = useState("#0A1142");
+  const [secondaryColor, setSecondaryColor] = useState("#F4B41A");
+  const [successColor, setSuccessColor] = useState("#10B981");
+  const [errorColor, setErrorColor] = useState("#EF4444");
+  const [siteFont, setSiteFont] = useState("Inter, sans-serif");
+  const [dashboardFont, setDashboardFont] = useState("Outfit, sans-serif");
+  const [systemLocked, setSystemLocked] = useState(false);
+
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined") {
@@ -222,7 +231,20 @@ function RootComponent() {
             ['gdu_gdu_logo', data.gduLogo],
             ['gdu_login_bg', data.loginBg],
             ['gdu_watermark', data.watermark],
-            ['gdu_portal_theme', data.activeTheme]
+            ['gdu_portal_theme', data.activeTheme],
+            ['gdu_primary_color', data.primaryColor],
+            ['gdu_secondary_color', data.secondaryColor],
+            ['gdu_success_color', data.successColor],
+            ['gdu_error_color', data.errorColor],
+            ['gdu_site_font', data.siteFont],
+            ['gdu_dashboard_font', data.dashboardFont],
+            ['gdu_report_font', data.reportFont],
+            ['gdu_seo_title', data.seoTitle],
+            ['gdu_meta_desc', data.metaDescription],
+            ['gdu_meta_keys', data.metaKeywords],
+            ['gdu_enable_sitemap', data.enableSitemap],
+            ['gdu_generate_robots', data.generateRobots],
+            ['gdu_system_locked', data.systemLocked]
           ];
           
           keys.forEach(([k, v]) => {
@@ -283,6 +305,43 @@ function RootComponent() {
 
     syncConfig();
   }, [mounted]);
+  // Listen for local site configuration updates to reload local state styles dynamically
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const handleLocalUpdate = () => {
+      if (typeof window !== 'undefined') {
+        setPrimaryColor(localStorage.getItem('gdu_primary_color') || '#0A1142');
+        setSecondaryColor(localStorage.getItem('gdu_secondary_color') || '#F4B41A');
+        setSuccessColor(localStorage.getItem('gdu_success_color') || '#10B981');
+        setErrorColor(localStorage.getItem('gdu_error_color') || '#EF4444');
+        setSiteFont(localStorage.getItem('gdu_site_font') || 'Inter, sans-serif');
+        setDashboardFont(localStorage.getItem('gdu_dashboard_font') || 'Outfit, sans-serif');
+        setSystemLocked(localStorage.getItem('gdu_system_locked') === 'true');
+      }
+    };
+
+    window.addEventListener('siteConfigUpdate', handleLocalUpdate);
+    handleLocalUpdate(); // Initial call
+
+    return () => {
+      window.removeEventListener('siteConfigUpdate', handleLocalUpdate);
+    };
+  }, [mounted]);  // Apply CSS variables to body
+  useEffect(() => {
+    if (!mounted) return;
+    const root = document.documentElement;
+    root.style.setProperty('--primary', primaryColor);
+    root.style.setProperty('--color-primary', primaryColor);
+    root.style.setProperty('--secondary', secondaryColor);
+    root.style.setProperty('--color-secondary', secondaryColor);
+    root.style.setProperty('--success', successColor);
+    root.style.setProperty('--color-success', successColor);
+    root.style.setProperty('--destructive', errorColor);
+    root.style.setProperty('--color-error', errorColor);
+    root.style.setProperty('--font-sans', siteFont);
+    root.style.setProperty('--font-display', dashboardFont);
+  }, [mounted, primaryColor, secondaryColor, successColor, errorColor, siteFont, dashboardFont]);
 
   // Maintenance mode redirect check
   useEffect(() => {
@@ -310,9 +369,47 @@ function RootComponent() {
         // Silently fail — never block the app due to maintenance check errors
       }
     };
-
     checkMaintenance();
   }, [mounted, router]);
+  const session = getSession();
+  const role = session?.role || '';
+  const isBypassed = role === 'super_admin' || role === 'governor' || role === 'dg_gdu';
+
+  if (systemLocked && mounted && !isBypassed) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 text-white p-4">
+        <div className="max-w-md w-full border border-red-500/20 shadow-2xl bg-slate-900 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-red-500/10 bg-red-500/5 text-center">
+            <div className="mx-auto bg-red-500/10 p-3 rounded-full size-14 flex items-center justify-center mb-3">
+              <PowerOff className="size-8 text-red-500 animate-pulse" />
+            </div>
+            <h3 className="text-xl font-black text-red-500 tracking-tight">ERP ACCESS SUSPENDED</h3>
+            <p className="text-[10px] text-red-400 font-bold mt-1 uppercase tracking-wider">EXECUTIVE MASTER LOCK OVERRIDE</p>
+          </div>
+          <div className="p-6 space-y-5 text-center">
+            <p className="text-sm leading-relaxed text-slate-300">
+              Under the executive authority of the Director General of the Governance Delivery Unit (GDU), access to the Kogi State Digital Governance ERP has been temporarily suspended.
+            </p>
+            <p className="text-xs text-red-400 bg-red-500/5 border border-red-500/10 p-3 rounded-lg font-semibold">
+              ⚠️ All active operational modules, budgets, e-memos, and workflow systems are frozen. No new logins or data transactions are allowed at this time.
+            </p>
+            
+            <div className="pt-4 border-t border-slate-800">
+              <button 
+                onClick={() => {
+                  signOut();
+                  window.location.href = '/login';
+                }}
+                className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-sm transition-colors cursor-pointer shadow-md inline-flex items-center gap-2 animate-bounce"
+              >
+                <PowerOff className="size-4" /> Return to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -322,6 +419,19 @@ function RootComponent() {
         </div>
       ) : (
         <>
+          <style>{`
+            :root {
+              --primary: ${primaryColor} !important;
+              --secondary: ${secondaryColor} !important;
+              --success: ${successColor} !important;
+              --destructive: ${errorColor} !important;
+              --font-sans: ${siteFont} !important;
+              --font-display: ${dashboardFont} !important;
+            }
+            body {
+              font-family: ${siteFont} !important;
+            }
+          `}</style>
           <Outlet />
           <CustomSystemModal />
         </>

@@ -55,6 +55,29 @@ function AdminConfigurationComponent() {
   const [loginBg, setLoginBg] = useState("/login-bg.jpg");
   const [watermark, setWatermark] = useState("/watermark.png");
 
+  // Branding States
+  const [primaryColor, setPrimaryColor] = useState("#059669");
+  const [secondaryColor, setSecondaryColor] = useState("#4f46e5");
+  const [successColor, setSuccessColor] = useState("#10b981");
+  const [errorColor, setErrorColor] = useState("#f43f5e");
+  const [siteFont, setSiteFont] = useState("Inter, sans-serif");
+  const [dashboardFont, setDashboardFont] = useState("Outfit, sans-serif");
+  const [reportFont, setReportFont] = useState("Merriweather, serif");
+
+  // SEO States
+  const [seoTitle, setSeoTitle] = useState("Kogi OneGov - Official Governance Platform");
+  const [metaDescription, setMetaDescription] = useState("The official Digital Governance and Performance Delivery platform for Kogi State...");
+  const [metaKeywords, setMetaKeywords] = useState("kogi state, governance, erp, delivery unit");
+  const [enableSitemap, setEnableSitemap] = useState(true);
+  const [generateRobots, setGenerateRobots] = useState(true);
+
+  // Performance Table State
+  const [performanceRows, setPerformanceRows] = useState<any[]>([
+    { year: 2026, budgetPerf: "88.4", planAlign: "92.0", kpiComp: "85.6" },
+    { year: 2025, budgetPerf: "84.2", planAlign: "86.5", kpiComp: "81.0" },
+    { year: 2024, budgetPerf: "79.5", planAlign: "78.0", kpiComp: "72.4" },
+  ]);
+
   // Working hours and holidays state
   const [startHour, setStartHour] = useState(() => workingHoursStore.startHour);
   const [endHour, setEndHour] = useState(() => workingHoursStore.endHour);
@@ -67,10 +90,23 @@ function AdminConfigurationComponent() {
 
   const [loading, setLoading] = useState(true);
 
+  // Synchronize performanceRows whenever activeYear changes
+  useEffect(() => {
+    setPerformanceRows(prev => {
+      const yearNum = Number(activeYear);
+      if (!prev.some(r => Number(r.year) === yearNum)) {
+        return [
+          { year: yearNum, budgetPerf: "0.0", planAlign: "0.0", kpiComp: "0.0" },
+          ...prev
+        ];
+      }
+      return prev;
+    });
+  }, [activeYear]);
+
   useEffect(() => {
     const loadConfig = async () => {
       setLoading(true);
-      
       
       const allSettings = await dbGetSystemSettings();
       if (allSettings.operational_year) {
@@ -92,6 +128,24 @@ function AdminConfigurationComponent() {
         setGduLogo(data.gduLogo || "/gdu-logo.png");
         setLoginBg(data.loginBg || "/login-bg.jpg");
         setWatermark(data.watermark || "/watermark.png");
+
+        setPrimaryColor(data.primaryColor || "#059669");
+        setSecondaryColor(data.secondaryColor || "#4f46e5");
+        setSuccessColor(data.successColor || "#10b981");
+        setErrorColor(data.errorColor || "#f43f5e");
+        setSiteFont(data.siteFont || "Inter, sans-serif");
+        setDashboardFont(data.dashboardFont || "Outfit, sans-serif");
+        setReportFont(data.reportFont || "Merriweather, serif");
+
+        setSeoTitle(data.seoTitle || "Kogi OneGov - Official Governance Platform");
+        setMetaDescription(data.metaDescription || "The official Digital Governance and Performance Delivery platform for Kogi State...");
+        setMetaKeywords(data.metaKeywords || "kogi state, governance, erp, delivery unit");
+        setEnableSitemap(data.enableSitemap !== undefined ? data.enableSitemap : true);
+        setGenerateRobots(data.generateRobots !== undefined ? data.generateRobots : true);
+
+        if (data.performanceRows) {
+          setPerformanceRows(data.performanceRows);
+        }
 
         if (data.alignmentLevel) setGovernanceAlignmentLevel(data.alignmentLevel);
         if (data.communicationHub !== undefined) setCommunicationHubEnabled(data.communicationHub);
@@ -153,6 +207,19 @@ function AdminConfigurationComponent() {
         activeBanner,
         greetings,
         slides,
+        primaryColor,
+        secondaryColor,
+        successColor,
+        errorColor,
+        siteFont,
+        dashboardFont,
+        reportFont,
+        seoTitle,
+        metaDescription,
+        metaKeywords,
+        enableSitemap,
+        generateRobots,
+        performanceRows,
         ...extraPayload
       };
       await dbSaveSystemSetting({
@@ -176,6 +243,19 @@ function AdminConfigurationComponent() {
         localStorage.setItem('gdu_login_bg', payload.loginBg);
         localStorage.setItem('gdu_watermark', payload.watermark);
         localStorage.setItem('gdu_portal_theme', payload.activeTheme);
+        
+        localStorage.setItem('gdu_primary_color', payload.primaryColor);
+        localStorage.setItem('gdu_secondary_color', payload.secondaryColor);
+        localStorage.setItem('gdu_success_color', payload.successColor);
+        localStorage.setItem('gdu_error_color', payload.errorColor);
+        localStorage.setItem('gdu_site_font', payload.siteFont);
+        localStorage.setItem('gdu_dashboard_font', payload.dashboardFont);
+        localStorage.setItem('gdu_report_font', payload.reportFont);
+        localStorage.setItem('gdu_seo_title', payload.seoTitle);
+        localStorage.setItem('gdu_meta_desc', payload.metaDescription);
+        localStorage.setItem('gdu_meta_keys', payload.metaKeywords);
+        localStorage.setItem('gdu_enable_sitemap', String(payload.enableSitemap));
+        localStorage.setItem('gdu_generate_robots', String(payload.generateRobots));
         
         if (payload.siteTitle) {
           document.title = payload.siteTitle;
@@ -523,43 +603,132 @@ function AdminConfigurationComponent() {
 
           {activeTab === 'logos' && (
             <Card className="border-border/60 shadow-sm">
-              <CardHeader className="border-b border-border/50">
+              <CardHeader className="border-b border-border/50 bg-muted/10">
                 <CardTitle>Logo Management</CardTitle>
                 <CardDescription>Upload and configure system-wide logos.</CardDescription>
               </CardHeader>
-              <CardContent className="pt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <LogoBox label="Main ERP Logo" />
-                <LogoBox label="Kogi State Seal" />
-                <LogoBox label="GDU Logo" />
-                <LogoBox label="Login Page Background" isWide />
-                <LogoBox label="Report Watermark" />
+              <CardContent className="pt-6 space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <LogoBox label="Main ERP Logo" value={mainLogo} onChange={setMainLogo} />
+                  <LogoBox label="Kogi State Seal" value={stateSeal} onChange={setStateSeal} />
+                  <LogoBox label="GDU Logo" value={gduLogo} onChange={setGduLogo} />
+                  <LogoBox label="Login Page Background" value={loginBg} onChange={setLoginBg} isWide />
+                  <LogoBox label="Report Watermark" value={watermark} onChange={setWatermark} />
+                </div>
+                
+                <div className="flex justify-end pt-4 border-t border-border/50">
+                   <button 
+                     onClick={() => handleSaveAll()}
+                     className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-semibold inline-flex items-center gap-2 transition-colors cursor-pointer"
+                   >
+                     <Save className="size-4" /> Save Logos
+                   </button>
+                </div>
               </CardContent>
             </Card>
           )}
 
           {activeTab === 'branding' && (
             <Card className="border-border/60 shadow-sm">
-              <CardHeader className="border-b border-border/50">
+              <CardHeader className="border-b border-border/50 bg-muted/10">
                 <CardTitle>Branding Center</CardTitle>
                 <CardDescription>Configure the visual identity and color palettes.</CardDescription>
               </CardHeader>
-              <CardContent className="pt-6 space-y-6">
+              <CardContent className="pt-6 space-y-6 text-foreground">
                 <div>
                   <h3 className="text-sm font-semibold mb-4 text-muted-foreground uppercase">System Colors</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <ColorPickerBox label="Primary Color" color="bg-emerald-600" hex="#059669" />
-                    <ColorPickerBox label="Secondary Color" color="bg-indigo-600" hex="#4f46e5" />
-                    <ColorPickerBox label="Success Color" color="bg-emerald-500" hex="#10b981" />
-                    <ColorPickerBox label="Error Color" color="bg-rose-500" hex="#f43f5e" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="border border-border p-3 rounded-lg flex items-center gap-3 bg-muted/10">
+                      <input 
+                        type="color" 
+                        value={primaryColor} 
+                        onChange={e => setPrimaryColor(e.target.value)} 
+                        className="size-8 rounded cursor-pointer border border-border/50 bg-transparent" 
+                      />
+                      <div>
+                        <div className="text-xs font-semibold">Primary Color</div>
+                        <div className="text-[10px] text-muted-foreground font-mono">{primaryColor}</div>
+                      </div>
+                    </div>
+                    <div className="border border-border p-3 rounded-lg flex items-center gap-3 bg-muted/10">
+                      <input 
+                        type="color" 
+                        value={secondaryColor} 
+                        onChange={e => setSecondaryColor(e.target.value)} 
+                        className="size-8 rounded cursor-pointer border border-border/50 bg-transparent" 
+                      />
+                      <div>
+                        <div className="text-xs font-semibold">Secondary Color</div>
+                        <div className="text-[10px] text-muted-foreground font-mono">{secondaryColor}</div>
+                      </div>
+                    </div>
+                    <div className="border border-border p-3 rounded-lg flex items-center gap-3 bg-muted/10">
+                      <input 
+                        type="color" 
+                        value={successColor} 
+                        onChange={e => setSuccessColor(e.target.value)} 
+                        className="size-8 rounded cursor-pointer border border-border/50 bg-transparent" 
+                      />
+                      <div>
+                        <div className="text-xs font-semibold">Success Color</div>
+                        <div className="text-[10px] text-muted-foreground font-mono">{successColor}</div>
+                      </div>
+                    </div>
+                    <div className="border border-border p-3 rounded-lg flex items-center gap-3 bg-muted/10">
+                      <input 
+                        type="color" 
+                        value={errorColor} 
+                        onChange={e => setErrorColor(e.target.value)} 
+                        className="size-8 rounded cursor-pointer border border-border/50 bg-transparent" 
+                      />
+                      <div>
+                        <div className="text-xs font-semibold">Error Color</div>
+                        <div className="text-[10px] text-muted-foreground font-mono">{errorColor}</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="pt-4 border-t border-border/50">
-                   <h3 className="text-sm font-semibold mb-4 text-muted-foreground uppercase">Typography</h3>
-                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <InputBox label="Site Font" value="Inter, sans-serif" />
-                      <InputBox label="Dashboard Font" value="Outfit, sans-serif" />
-                      <InputBox label="Report Font" value="Merriweather, serif" />
-                   </div>
+                
+                <div className="pt-4 border-t border-border/50 space-y-4">
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase">Typography</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium">Site Font</label>
+                      <input 
+                        type="text" 
+                        value={siteFont} 
+                        onChange={e => setSiteFont(e.target.value)} 
+                        className="w-full p-2 bg-background border border-border rounded-md text-sm" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium">Dashboard Font</label>
+                      <input 
+                        type="text" 
+                        value={dashboardFont} 
+                        onChange={e => setDashboardFont(e.target.value)} 
+                        className="w-full p-2 bg-background border border-border rounded-md text-sm" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium">Report Font</label>
+                      <input 
+                        type="text" 
+                        value={reportFont} 
+                        onChange={e => setReportFont(e.target.value)} 
+                        className="w-full p-2 bg-background border border-border rounded-md text-sm" 
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-4 border-t border-border/50">
+                   <button 
+                     onClick={() => handleSaveAll()}
+                     className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-semibold inline-flex items-center gap-2 transition-colors cursor-pointer"
+                   >
+                     <Save className="size-4" /> Save Branding
+                   </button>
                 </div>
               </CardContent>
             </Card>
@@ -567,23 +736,68 @@ function AdminConfigurationComponent() {
 
           {activeTab === 'seo' && (
             <Card className="border-border/60 shadow-sm">
-              <CardHeader className="border-b border-border/50">
+              <CardHeader className="border-b border-border/50 bg-muted/10">
                 <CardTitle>SEO Settings</CardTitle>
                 <CardDescription>Search engine directives for public-facing pages.</CardDescription>
               </CardHeader>
-              <CardContent className="pt-6 space-y-4">
-                <InputBox label="SEO Title" value="Kogi OneGov - Official Governance Platform" />
+              <CardContent className="pt-6 space-y-4 text-foreground">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">SEO Title</label>
+                  <input 
+                    type="text" 
+                    value={seoTitle} 
+                    onChange={e => setSeoTitle(e.target.value)} 
+                    className="w-full p-2 bg-background border border-border rounded-md text-sm" 
+                  />
+                </div>
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium">Meta Description</label>
-                  <textarea className="w-full p-2 bg-muted/50 border border-border rounded-md text-sm h-20" defaultValue="The official Digital Governance and Performance Delivery platform for Kogi State..."></textarea>
+                  <textarea 
+                    value={metaDescription} 
+                    onChange={e => setMetaDescription(e.target.value)} 
+                    className="w-full p-2 bg-background border border-border rounded-md text-sm h-20"
+                  />
                 </div>
-                <InputBox label="Meta Keywords" value="kogi state, governance, erp, delivery unit" />
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Meta Keywords</label>
+                  <input 
+                    type="text" 
+                    value={metaKeywords} 
+                    onChange={e => setMetaKeywords(e.target.value)} 
+                    className="w-full p-2 bg-background border border-border rounded-md text-sm" 
+                  />
+                </div>
                 <div className="pt-4 border-t border-border/50">
                    <h3 className="text-sm font-semibold mb-4">Indexing Rules</h3>
-                   <div className="flex gap-4">
-                     <label className="flex items-center gap-2 text-sm"><input type="checkbox" defaultChecked /> Enable Sitemap.xml</label>
-                     <label className="flex items-center gap-2 text-sm"><input type="checkbox" defaultChecked /> Generate Robots.txt</label>
+                   <div className="flex gap-6">
+                     <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                       <input 
+                         type="checkbox" 
+                         checked={enableSitemap} 
+                         onChange={e => setEnableSitemap(e.target.checked)} 
+                         className="rounded border-border text-primary focus:ring-primary size-4" 
+                       /> 
+                       Enable Sitemap.xml
+                     </label>
+                     <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                       <input 
+                         type="checkbox" 
+                         checked={generateRobots} 
+                         onChange={e => setGenerateRobots(e.target.checked)} 
+                         className="rounded border-border text-primary focus:ring-primary size-4" 
+                       /> 
+                       Generate Robots.txt
+                     </label>
                    </div>
+                </div>
+
+                <div className="flex justify-end pt-4 border-t border-border/50">
+                   <button 
+                     onClick={() => handleSaveAll()}
+                     className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-semibold inline-flex items-center gap-2 transition-colors cursor-pointer"
+                   >
+                     <Save className="size-4" /> Save SEO Settings
+                   </button>
                 </div>
               </CardContent>
             </Card>
@@ -928,11 +1142,11 @@ function AdminConfigurationComponent() {
 
           {activeTab === 'yearly-close' && (
             <Card className="border-border/60 shadow-sm animate-in fade-in zoom-in-95">
-              <CardHeader className="border-b border-border/50">
+              <CardHeader className="border-b border-border/50 bg-muted/10">
                 <CardTitle>Year-End Lock & State Performance Dashboard</CardTitle>
                 <CardDescription>Lock active system workflows, backup system data, and analyze overall state development trends.</CardDescription>
               </CardHeader>
-              <CardContent className="pt-6 space-y-6">
+              <CardContent className="pt-6 space-y-6 text-foreground">
                 {/* Year Closure Panel */}
                 <div className="p-4 border border-rose-500/30 bg-rose-500/5 rounded-xl space-y-4">
                   <div className="flex items-center gap-3">
@@ -941,38 +1155,83 @@ function AdminConfigurationComponent() {
                     </div>
                     <div>
                       <h4 className="font-bold text-sm text-rose-800">Close Out Current Operational Year</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Locks all memos, budgets, and tasks. Only Super Administrators will be able to edit past years' information.</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Locks all memos, budgets, and tasks. Moving system migrates workflows to the next year.</p>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-3 items-center justify-between border-t border-rose-500/10 pt-3">
-                    <span className="text-xs font-bold text-foreground">
-                      Current Active Year: <span className="text-rose-600">{activeYear} {isYearLocked ? '(Locked)' : ''}</span>
-                    </span>
-                    <button 
-                      onClick={async () => {
-                        if (isYearLocked) {
-                          alert(`Year ${activeYear} is already locked.`);
-                          return;
-                        }
-                        const confirmLock = confirm(`Are you sure you want to freeze all workflows for ${activeYear}? This cannot be easily undone.`);
-                        if (confirmLock) {
-                          try {
-                            
-                            const nextYear = activeYear + 1;
-                            await dbToggleYearLock({ data: { year: nextYear, isLocked: false } });
-                            setActiveYear(nextYear);
-                            setIsYearLocked(false);
-                            alert(`Workflows for ${activeYear} frozen. A new workspace for ${nextYear} has been initialized.`);
-                          } catch (e: any) {
-                            alert('Failed to lock year: ' + e.message);
+                  
+                  <div className="border-t border-rose-500/10 pt-3 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold">
+                        Current Operational Year: <span className="text-rose-600 font-mono text-sm">{activeYear}</span>
+                      </span>
+                      <span className="text-xs font-bold">
+                        Workflows Status: <span className={`px-2 py-0.5 rounded text-[10px] ${isYearLocked ? 'bg-rose-500/10 text-rose-600' : 'bg-emerald-500/10 text-emerald-600'}`}>{isYearLocked ? 'Locked' : 'Active / Unlocked'}</span>
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2.5 pt-2 border-t border-rose-500/5">
+                      <button 
+                        onClick={async () => {
+                          const confirmToggle = confirm(`Are you sure you want to ${isYearLocked ? 're-open and unlock' : 'freeze and lock'} workflows for Year ${activeYear}?`);
+                          if (confirmToggle) {
+                            try {
+                              await dbToggleYearLock({ data: { year: activeYear, isLocked: !isYearLocked } });
+                              setIsYearLocked(!isYearLocked);
+                              alert(`Year ${activeYear} workflows ${!isYearLocked ? 'Locked' : 'Unlocked'} successfully.`);
+                            } catch (e: any) {
+                              alert('Failed to update year status: ' + e.message);
+                            }
                           }
-                        }
-                      }}
-                      className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold shadow-sm disabled:opacity-50"
-                      disabled={isYearLocked}
-                    >
-                      {isYearLocked ? `Year ${activeYear} Locked` : `Freeze Workflows & Lock Year ${activeYear}`}
-                    </button>
+                        }}
+                        className={`px-3 py-1.5 rounded text-xs font-bold shadow-sm transition-colors cursor-pointer ${
+                          isYearLocked 
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
+                            : 'bg-rose-600 hover:bg-rose-700 text-white'
+                        }`}
+                      >
+                        {isYearLocked ? `Unlock / Re-open Year ${activeYear}` : `Freeze & Lock Year ${activeYear}`}
+                      </button>
+
+                      <button 
+                        onClick={async () => {
+                          const nextYear = activeYear + 1;
+                          const confirmMigrate = confirm(`Are you sure you want to migrate the system to Year ${nextYear}? This initializes the workspace for the next operational cycle.`);
+                          if (confirmMigrate) {
+                            try {
+                              await dbToggleYearLock({ data: { year: nextYear, isLocked: false } });
+                              setActiveYear(nextYear);
+                              setIsYearLocked(false);
+                              alert(`System successfully migrated to Year ${nextYear}.`);
+                            } catch (e: any) {
+                              alert('Failed to migrate to next year: ' + e.message);
+                            }
+                          }
+                        }}
+                        className="px-3 py-1.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded text-xs font-bold shadow-sm cursor-pointer"
+                      >
+                        Move System to Next Year ({activeYear + 1})
+                      </button>
+
+                      <button 
+                        onClick={async () => {
+                          const prevYear = activeYear - 1;
+                          const confirmRollback = confirm(`Are you sure you want to rollback the operational cycle to Year ${prevYear}? This reverses the migration.`);
+                          if (confirmRollback) {
+                            try {
+                              await dbToggleYearLock({ data: { year: prevYear, isLocked: false } });
+                              setActiveYear(prevYear);
+                              setIsYearLocked(false);
+                              alert(`Operational cycle rolled back to Year ${prevYear}.`);
+                            } catch (e: any) {
+                              alert('Failed to rollback year: ' + e.message);
+                            }
+                          }
+                        }}
+                        className="px-3 py-1.5 border border-border bg-background hover:bg-muted text-foreground rounded text-xs font-bold shadow-sm cursor-pointer"
+                      >
+                        Reverse Migration (Rollback to {activeYear - 1})
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -1009,7 +1268,7 @@ function AdminConfigurationComponent() {
                 </div>
 
                 {/* Performance Plan Section */}
-                <div className="space-y-4">
+                <div className="space-y-4 pt-2">
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Kogi State Joint Performance Plan (32-Year Development Plan vs Budget)</h3>
                   
                   <div className="overflow-x-auto border border-border rounded-lg">
@@ -1024,33 +1283,79 @@ function AdminConfigurationComponent() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
-                        <tr className="hover:bg-muted/5 font-medium">
-                          <td className="px-4 py-3 text-primary font-bold">2026 (Active)</td>
-                          <td className="px-4 py-3 text-right text-emerald-600">88.4%</td>
-                          <td className="px-4 py-3 text-right text-indigo-600">92.0%</td>
-                          <td className="px-4 py-3 text-right text-emerald-600">85.6%</td>
-                          <td className="px-4 py-3 text-right font-bold text-primary">88.7%</td>
-                        </tr>
-                        <tr className="hover:bg-muted/5 text-muted-foreground">
-                          <td className="px-4 py-3 font-semibold">2025 (Locked)</td>
-                          <td className="px-4 py-3 text-right">84.2%</td>
-                          <td className="px-4 py-3 text-right">86.5%</td>
-                          <td className="px-4 py-3 text-right">81.0%</td>
-                          <td className="px-4 py-3 text-right font-bold text-foreground">83.9%</td>
-                        </tr>
-                        <tr className="hover:bg-muted/5 text-muted-foreground">
-                          <td className="px-4 py-3 font-semibold">2024 (Locked)</td>
-                          <td className="px-4 py-3 text-right">79.5%</td>
-                          <td className="px-4 py-3 text-right">78.0%</td>
-                          <td className="px-4 py-3 text-right">72.4%</td>
-                          <td className="px-4 py-3 text-right font-bold text-foreground">76.6%</td>
-                        </tr>
+                        {performanceRows.map((row, idx) => {
+                          const overall = ((Number(row.budgetPerf || 0) + Number(row.planAlign || 0) + Number(row.kpiComp || 0)) / 3).toFixed(1);
+                          return (
+                            <tr key={row.year} className="hover:bg-muted/5 font-medium">
+                              <td className="px-4 py-3 font-bold text-foreground">
+                                {Number(row.year) === activeYear ? `${row.year} (Active)` : `${row.year} (Locked)`}
+                              </td>
+                              <td className="px-4 py-2 text-right">
+                                <div className="inline-flex items-center gap-1">
+                                  <input 
+                                    type="text" 
+                                    value={row.budgetPerf} 
+                                    onChange={e => {
+                                      const updated = [...performanceRows];
+                                      updated[idx].budgetPerf = e.target.value;
+                                      setPerformanceRows(updated);
+                                    }} 
+                                    className="w-14 p-1 bg-background border border-border rounded text-right text-xs"
+                                  />
+                                  <span>%</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-2 text-right">
+                                <div className="inline-flex items-center gap-1">
+                                  <input 
+                                    type="text" 
+                                    value={row.planAlign} 
+                                    onChange={e => {
+                                      const updated = [...performanceRows];
+                                      updated[idx].planAlign = e.target.value;
+                                      setPerformanceRows(updated);
+                                    }} 
+                                    className="w-14 p-1 bg-background border border-border rounded text-right text-xs"
+                                  />
+                                  <span>%</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-2 text-right">
+                                <div className="inline-flex items-center gap-1">
+                                  <input 
+                                    type="text" 
+                                    value={row.kpiComp} 
+                                    onChange={e => {
+                                      const updated = [...performanceRows];
+                                      updated[idx].kpiComp = e.target.value;
+                                      setPerformanceRows(updated);
+                                    }} 
+                                    className="w-14 p-1 bg-background border border-border rounded text-right text-xs"
+                                  />
+                                  <span>%</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-right font-bold text-primary">
+                                {overall}%
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
 
+                  <div className="flex justify-end pt-2">
+                    <button 
+                      onClick={() => handleSaveAll()}
+                      className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-semibold inline-flex items-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <Save className="size-4" /> Save Performance Index
+                    </button>
+                  </div>
+
                   {/* Trend chart/lines visual illustration */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                     <div className="p-4 bg-primary/5 border border-primary/10 rounded-xl">
                       <div className="text-[10px] text-muted-foreground uppercase font-bold">Plan Horizon Progress</div>
                       <div className="text-lg font-extrabold text-primary mt-1">12.8% Completed</div>
@@ -1092,7 +1397,7 @@ function TabButton({ id, label, icon: Icon, activeTab, onClick }: any) {
   return (
     <button 
       onClick={() => onClick(id)}
-      className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-colors
+      className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-colors cursor-pointer
       ${isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-muted-foreground'}`}
     >
       <Icon className={`size-4 ${isActive ? 'text-primary-foreground' : 'text-primary'}`} />
@@ -1101,33 +1406,60 @@ function TabButton({ id, label, icon: Icon, activeTab, onClick }: any) {
   )
 }
 
-function InputBox({ label, value }: { label: string, value: string }) {
-  return (
-    <div className="space-y-1.5">
-      <label className="text-sm font-medium">{label}</label>
-      <input type="text" className="w-full p-2 bg-muted/50 border border-border rounded-md text-sm" defaultValue={value} />
-    </div>
-  )
-}
+function LogoBox({ 
+  label, 
+  value, 
+  onChange, 
+  isWide 
+}: { 
+  label: string; 
+  value: string; 
+  onChange: (val: string) => void; 
+  isWide?: boolean; 
+}) {
+  const fileInputId = `file-input-${label.replace(/\s+/g, '-').toLowerCase()}`;
 
-function LogoBox({ label, isWide }: { label: string, isWide?: boolean }) {
-  return (
-    <div className={`border border-dashed border-border rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:bg-muted/10 transition-colors cursor-pointer ${isWide ? 'sm:col-span-2 lg:col-span-3 h-32' : 'h-32'}`}>
-      <ImageIcon className="size-6 text-muted-foreground" />
-      <span className="text-xs font-semibold">{label}</span>
-      <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded">Click to Upload</span>
-    </div>
-  )
-}
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onChange(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-function ColorPickerBox({ label, color, hex }: { label: string, color: string, hex: string }) {
   return (
-    <div className="border border-border p-3 rounded-lg flex items-center gap-3">
-      <div className={`size-8 rounded-md ${color} border border-border/50 shadow-inner`}></div>
-      <div>
-        <div className="text-xs font-semibold">{label}</div>
-        <div className="text-[10px] text-muted-foreground font-mono">{hex}</div>
-      </div>
+    <div className={`border border-dashed border-border rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:bg-muted/10 transition-colors relative ${isWide ? 'sm:col-span-2 lg:col-span-3 min-h-[140px]' : 'min-h-[140px]'}`}>
+      <input 
+        type="file" 
+        id={fileInputId} 
+        accept="image/*" 
+        className="hidden" 
+        onChange={handleFileChange} 
+      />
+      
+      {value ? (
+        <div className="relative w-full h-full flex flex-col items-center gap-2 text-center">
+          <span className="text-xs font-bold text-muted-foreground block">{label}</span>
+          <div className={`flex items-center justify-center bg-muted/40 rounded border p-1 overflow-hidden ${isWide ? 'w-full h-20' : 'size-12'}`}>
+            <img src={value} alt={label} className="max-w-full max-h-full object-contain" />
+          </div>
+          <label 
+            htmlFor={fileInputId} 
+            className="text-[10px] font-bold text-primary hover:underline cursor-pointer"
+          >
+            Change Image
+          </label>
+        </div>
+      ) : (
+        <label htmlFor={fileInputId} className="flex flex-col items-center justify-center gap-2 cursor-pointer w-full h-full text-center">
+          <ImageIcon className="size-6 text-muted-foreground" />
+          <span className="text-xs font-semibold">{label}</span>
+          <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded">Click to Upload</span>
+        </label>
+      )}
     </div>
-  )
+  );
 }

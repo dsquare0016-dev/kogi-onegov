@@ -38,7 +38,6 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
   {
     label: "Executive Overview Cards",
     items: [
-      { to: "/dashboard/governance", label: "Governance", icon: Landmark },
       { to: "/dashboard/workforce", label: "Workforce", icon: Users },
       { to: "/dashboard/performance-cards", label: "Performance", icon: Activity },
       { to: "/dashboard/financial", label: "Financial", icon: Wallet },
@@ -104,21 +103,6 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
           { to: "/dashboard/positions/delete", label: "Delete Position" },
         ]
       },
-      {
-        label: "Cabinet Dashboards", icon: Landmark,
-        subItems: [
-          { to: "/dashboard/structure/governor", label: "Governor" },
-          { to: "/dashboard/structure/deputy-governor", label: "Deputy Governor" },
-          { to: "/dashboard/structure/ssg", label: "SSG" },
-          { to: "/dashboard/structure/chief-of-staff", label: "Chief of Staff" },
-          { to: "/dashboard/structure/deputy-chief-of-staff", label: "Deputy Chief of Staff" },
-          { to: "/dashboard/structure/head-of-service", label: "Head of Service" },
-          { to: "/dashboard/structure/civil-service-commission", label: "Civil Service Commission" },
-          { to: "/dashboard/structure/auditor-general", label: "Auditor General" },
-          { to: "/dashboard/structure/accountant-general", label: "Accountant General" },
-          { to: "/dashboard/structure/gdu", label: "GDU" },
-        ]
-      },
     ],
   },
   {
@@ -143,25 +127,22 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
     label: "Budget Control Center",
     items: [
       {
-        label: "Hierarchical Budget Control", icon: Landmark,
+        label: "Budget Allocation & Distribution", icon: Landmark,
         subItems: [
-          { to: "/dashboard/budget/proposal", label: "Create Budget Proposal" },
-          { to: "/dashboard/budget/director-review", label: "Director Budget Review" },
           { to: "/dashboard/budget/allocation", label: "General Budget Allocation" },
           { to: "/dashboard/budget/distribution", label: "Ministry Downstream Distribution" },
           { to: "/dashboard/budget/reports", label: "End-of-Year Reporting & Review" },
         ]
       },
       {
+        label: "Budget Line Master", icon: Wallet,
+        to: "/dashboard/budget/mda-lines"
+      },
+      {
         label: "Budget Framework", icon: Wallet,
         subItems: [
           { to: "/dashboard/budget/annual", label: "Annual Budget" },
-          { to: "/dashboard/budget/revised", label: "Revised Budget" },
-          { to: "/dashboard/budget/supplementary", label: "Supplementary Budget" },
-          { to: "/dashboard/budget/categories", label: "Budget Categories" },
-          { to: "/dashboard/budget/templates", label: "Budget Templates" },
           { to: "/dashboard/budget/parameters", label: "Budget Measurement Parameters" },
-          { to: "/dashboard/budget/upload", label: "Budget Upload" },
         ]
       },
       {
@@ -263,10 +244,8 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
         label: "Desk Officer Management", icon: IdCard,
         subItems: [
           { to: "/dashboard/desk-officers/assign", label: "Assign Desk Officers" },
-          { to: "/dashboard/desk-officers/certification", label: "Certification Status" },
           { to: "/dashboard/desk-officers/training", label: "Training Status" },
           { to: "/dashboard/desk-officers/replacement", label: "Replacement Requests" },
-          { to: "/dashboard/desk-officers/redeployment", label: "Redeployment Requests" },
         ]
       }
     ],
@@ -278,7 +257,6 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
         label: "Activity Management", icon: Target,
         subItems: [
           { to: "/dashboard/activities/create", label: "Create Activity" },
-          { to: "/dashboard/activities/assign", label: "Assign Activity" },
           { to: "/dashboard/activities/monitor", label: "Monitor Activity" },
         ]
       },
@@ -316,14 +294,8 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
           { to: "/dashboard/executive-room/commissioners", label: "Commissioner Rankings" },
           { to: "/dashboard/executive-room/ministries", label: "Ministry Rankings" },
           { to: "/dashboard/executive-room/projects", label: "Project Rankings" },
-          { to: "/dashboard/executive-room/budgets", label: "Budget Rankings" },
-          { to: "/dashboard/executive-room/risks", label: "Risk Rankings" },
         ]
       },
-      {
-        label: "DG GDU Command Center", icon: BadgeAlert,
-        to: "/dashboard/gdu-center/requests"
-      }
     ],
   },
   {
@@ -384,7 +356,6 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
         label: "Support", icon: MessageSquare,
         subItems: [
           { to: "/dashboard/support", label: "Live Support Desk" },
-          { to: "/dashboard/ai/outputs", label: "AI Outputs & Briefs" },
         ]
       }
     ]
@@ -796,7 +767,7 @@ export function checkItemVisibility(role: Role, label: string, showAll: boolean,
   if (additional.includes('Access Audit Center') && label === 'Audit Center') return true;
   if (additional.includes('Treasury Center') && label === 'Treasury Center') return true;
   if (additional.includes('Access Treasury Center') && label === 'Treasury Center') return true;
-  if (additional.includes('View Budget Reports') && (label === 'Budget Intelligence' || label === 'Hierarchical Budget Control' || label === 'Budget Framework')) return true;
+  if (additional.includes('View Budget Reports') && (label === 'Budget Intelligence' || label === 'Budget Allocation & Distribution' || label === 'Budget Framework')) return true;
   if (additional.includes('Upload Project Evidence') && label === 'Projects') return true;
   if (additional.includes('USER MANAGEMENT') && (label === 'Users' || label === 'Permission Engine')) return true;
   if (additional.includes('System Settings') && label === 'System Administration') return true;
@@ -804,7 +775,6 @@ export function checkItemVisibility(role: Role, label: string, showAll: boolean,
   const executives: Role[] = ['governor', 'deputy_governor', 'ssg', 'chief_of_staff', 'deputy_chief_of_staff', 'head_of_service', 'dg_gdu', 'civil_service_commission', 'accountant_general', 'auditor_general'];
 
   switch (label) {
-    case 'Governance':
     case 'Workforce':
     case 'Performance':
     case 'Financial':
@@ -823,7 +793,10 @@ export function checkItemVisibility(role: Role, label: string, showAll: boolean,
     case 'Alignment Engine':
       return ['governor', 'dg_gdu', 'commissioner', 'perm_secretary', 'director_prs', 'm_and_e_officer', 'director'].includes(role);
 
-    case 'Hierarchical Budget Control':
+    case 'Budget Line Master':
+      return ['desk_officer', 'budget_officer', 'governor', 'accountant_general', 'auditor_general', 'commissioner', 'perm_secretary', 'director_finance', 'director_admin'].includes(role);
+
+    case 'Budget Allocation & Distribution':
     case 'Budget Framework':
     case 'Budget Intelligence':
       return ['governor', 'accountant_general', 'auditor_general', 'budget_officer', 'commissioner', 'perm_secretary', 'director_finance'].includes(role);
@@ -851,8 +824,6 @@ export function checkItemVisibility(role: Role, label: string, showAll: boolean,
     case 'Executive Room':
       return ['governor', 'deputy_governor', 'ssg', 'chief_of_staff', 'deputy_chief_of_staff', 'dg_gdu', 'auditor_general', 'accountant_general'].includes(role);
 
-    case 'DG GDU Command Center':
-      return ['dg_gdu', 'governor'].includes(role);
 
     case 'E-Memo Center':
     case 'Communication Hub':
