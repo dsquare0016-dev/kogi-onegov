@@ -2,7 +2,7 @@ import { dbGetRecruitmentCampaigns, dbGetRecruitmentApplications, dbGetWorkforce
 import { createFileRoute } from '@tanstack/react-router';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
-import { Power, Users, Save, Plus, X, Briefcase, FileText, Link2, Copy, Check, CheckCircle2, ChevronRight, UserPlus, RefreshCw, Loader2 } from 'lucide-react';
+import { Power, Users, Save, Plus, X, Briefcase, FileText, Link2, Copy, Check, CheckCircle2, ChevronRight, UserPlus, RefreshCw, Loader2, Trash2 } from 'lucide-react';
 import { getSession } from '@/lib/auth';
 
 export const Route = createFileRoute('/dashboard/staff/recruitment')({
@@ -231,7 +231,7 @@ function RecruitmentAdminPage() {
           
           const slugToUse = selectedCampaign.slug || selectedCampaign.public_slug;
           if (!slugToUse) return;
-          const fullCamp = await dbGetRecruitmentCampaignBySlug({ data: { slug: slugToUse } });
+          const fullCamp = (await dbGetRecruitmentCampaignBySlug({ data: { slug: slugToUse } })) as any;
           if (fullCamp) {
             setRules(fullCamp.eligibility_rules || '');
             setPositions(fullCamp.positions?.map((p: any) => p.position_title).join(', ') || '');

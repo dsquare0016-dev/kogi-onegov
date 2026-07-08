@@ -38,6 +38,12 @@ function RecruitmentApplyPage() {
   
   // Custom uploaded files (from campaign_documents)
   const [uploadedDocuments, setUploadedDocuments] = useState<any[]>([]);
+  
+  // Legacy doc state variables
+  const [cvUrl, setCvUrl] = useState('');
+  const [credentialsUrl, setCredentialsUrl] = useState('');
+  const [passportBase64, setPassportBase64] = useState('');
+  const [signatureBase64, setSignatureBase64] = useState('');
 
   // Selected dynamic certifications checklist
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
@@ -81,7 +87,7 @@ function RecruitmentApplyPage() {
     const fetchCampaign = async () => {
       try {
         
-        const res = await dbGetRecruitmentCampaignBySlug({ data: { slug } });
+        const res = (await dbGetRecruitmentCampaignBySlug({ data: { slug } })) as any;
         setCampaign(res);
         if (res) {
           setConfig({
