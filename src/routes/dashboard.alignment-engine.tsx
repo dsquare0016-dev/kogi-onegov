@@ -57,6 +57,22 @@ function AlignmentEnginePage() {
     }
   };
 
+  const formatNaira = (amount: number) => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(amount || 0);
+  
+  const displayProgrammes = data?.programmes || [];
+  
+  // Calculate mock or real alignment metrics
+  const totalProgs = displayProgrammes.length || 1;
+  const alignedProgs = displayProgrammes.filter((p: any) => p.pillar_id).length;
+  const score = Math.round((alignedProgs / totalProgs) * 100) || 0;
+  
+  const rogueBudget = data?.projects?.filter((p: any) => !p.pillar_id).reduce((sum: number, p: any) => sum + (Number(p.approved_amount) || 0), 0) || 0;
+
+  const getAlignmentStatus = (row: any) => {
+    if (row.pillar_id) return 'Aligned';
+    return 'Rogue';
+  };
+
   const FLOW_NODES = [
     { label: "Development Plan Pillar", icon: <Database className="size-5" /> },
     { label: "Strategic Objective", icon: <Target className="size-5" /> },

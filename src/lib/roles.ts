@@ -13,8 +13,6 @@ export type Role =
   | "dg_chairman"
   | "civil_service_commission"
   | "perm_secretary"
-  | "deputy_director"
-  | "assistant_director"
   | "staff"
   | "ict_admin"
   | "desk_officer"
@@ -47,8 +45,6 @@ export const ROLES: RoleProfile[] = [
   { id: "dg_chairman", title: "Director General/Chiarman", shortTitle: "DG/Chairman", scope: "department", demoEmail: "dg.chairman@kogistate.gov.ng", demoName: "Hon. Chairman", mda: "State Boards", motherMinistry: "State Government", gender: "male" },
   { id: "civil_service_commission", title: "Civil Service Commission", shortTitle: "CSC", scope: "executive", demoEmail: "csc@kogistate.gov.ng", demoName: "Hon. Chairman CSC", mda: "Kogi State Civil Service Commission", motherMinistry: "State Government", gender: "male" },
   { id: "perm_secretary", title: "Permanent Secretary", shortTitle: "Perm. Sec.", scope: "ministry", demoEmail: "permsec.health@kogistate.gov.ng", demoName: "Mr. Sule Enehe", ministry: "Ministry of Health", mda: "Hospital Management Board", motherMinistry: "Ministry of Health", gender: "male" },
-  { id: "deputy_director", title: "Deputy Director", shortTitle: "Deputy Director", scope: "department", demoEmail: "deputy.director@kogistate.gov.ng", demoName: "Mr. Emeka Obi", mda: "Administration", motherMinistry: "State Government", gender: "male" },
-  { id: "assistant_director", title: "Assistant Director", shortTitle: "Asst. Director", scope: "department", demoEmail: "asst.director@kogistate.gov.ng", demoName: "Mrs. Amina Yusuf", mda: "Operations", motherMinistry: "State Government", gender: "female" },
   { id: "staff", title: "Staff (civil servant, ad-hoc)", shortTitle: "Staff", scope: "staff", demoEmail: "staff@kogistate.gov.ng", demoName: "Miss. Grace Onah", mda: "Kogi Internal Revenue Service", motherMinistry: "Ministry of Finance, Budget & Economic Planning", gender: "female" },
   { id: "ict_admin", title: "ICT/Helpdesk/User Support Officer", shortTitle: "ICT Support", scope: "staff", demoEmail: "ict@kogistate.gov.ng", demoName: "Engr. Emmanuel Itodo", mda: "ICT Dept", motherMinistry: "Ministry of Science & Tech", gender: "male" },
   { id: "desk_officer", title: "Desk Officer/Staff Support Officer", shortTitle: "Desk Officer", scope: "staff", demoEmail: "desk.officer@kogistate.gov.ng", demoName: "Mr. Tunde Lawal", mda: "HR Desk", motherMinistry: "State Government", gender: "male" },
