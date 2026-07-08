@@ -1490,7 +1490,8 @@ export const dbGetProgrammesAndProjects = createServerFn({ method: "POST" })
         progress: Number(r.progress_percentage || 0),
         risk: 'Low',
         status: r.status || 'Active',
-        spent: Number(r.amount_spent || 0)
+        spent: Number(r.amount_spent || 0),
+        pillar: r.pillar_name || null
       }));
 
       return {

@@ -31,17 +31,13 @@ function AgencyActionPage() {
   // Create Form States
   const [name, setName] = useState('');
   const [motherMinistry, setMotherMinistry] = useState('');
-  const [budget, setBudget] = useState('');
-  const [dgName, setDgName] = useState('');
   const [dgPhone, setDgPhone] = useState('');
   const [dgEmail, setDgEmail] = useState('');
-  const [deptsCount, setDeptsCount] = useState('');
 
   // Edit Form States
   const [editDgName, setEditDgName] = useState('');
   const [editDgPhone, setEditDgPhone] = useState('');
   const [editDgEmail, setEditDgEmail] = useState('');
-  const [editBudget, setEditBudget] = useState('');
   const [editMother, setEditMother] = useState('');
   const [selectedStaffId, setSelectedStaffId] = useState<string | null>(null);
 
@@ -73,7 +69,6 @@ function AgencyActionPage() {
       setEditDgName(selectedAgency.head || '');
       setEditDgPhone(selectedAgency.phone || '');
       setEditDgEmail(selectedAgency.email || '');
-      setEditBudget(selectedAgency.budget?.toString() || '');
       setEditMother(selectedAgency.motherMinistry || '');
       
       const match = staffList.find(s => s.name === selectedAgency.head);
@@ -230,29 +225,6 @@ function AgencyActionPage() {
               </select>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold">DG/Exec Secretary Name</label>
-                <input 
-                  type="text" 
-                  value={dgName}
-                  onChange={e => setDgName(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. Dr. Jane Doe" 
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold">Allocated Budget (₦ Millions)</label>
-                <input 
-                  type="number" 
-                  value={budget}
-                  onChange={e => setBudget(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. 200" 
-                />
-              </div>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="text-sm font-semibold">Contact Phone</label>
@@ -274,17 +246,6 @@ function AgencyActionPage() {
                   placeholder="e.g. info@agency.kg.gov.ng" 
                 />
               </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-sm font-semibold">Number of Departments</label>
-              <input 
-                type="number" 
-                value={deptsCount}
-                onChange={e => setDeptsCount(e.target.value)}
-                className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                placeholder="e.g. 3" 
-              />
             </div>
 
             <div className="pt-4 flex justify-end">
@@ -402,15 +363,7 @@ function AgencyActionPage() {
                       </select>
                     </div>
 
-                    <div className="space-y-1 pt-2 border-t border-border/50">
-                      <label className="text-xs font-bold text-muted-foreground uppercase">Allocated Budget (₦ Millions)</label>
-                      <input 
-                        type="number" 
-                        value={editBudget}
-                        onChange={e => setEditBudget(e.target.value)}
-                        className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary font-mono" 
-                      />
-                    </div>
+                    {/* Budget is computed dynamically based on child units/projects and not edited here */}
                   </div>
                 </div>
               )}

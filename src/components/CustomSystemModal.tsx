@@ -39,7 +39,8 @@ export function CustomSystemModal() {
   if (type === 'alert') {
     return (
       <div 
-        className="fixed top-[84px] right-6 z-[10000] w-full max-w-[420px] rounded-r-xl rounded-l-md bg-card border border-border border-l-4 border-l-red-500 shadow-2xl p-5 pr-10 relative flex flex-col gap-3 text-foreground animate-in slide-in-from-top-4 fade-in duration-300"
+        className="fixed z-[10000] w-full max-w-[420px] rounded-r-xl rounded-l-md bg-card border border-border border-l-4 border-l-red-500 shadow-2xl p-5 pr-10 relative flex flex-col gap-3 text-foreground animate-in slide-in-from-top-4 fade-in duration-300"
+        style={{ top: '84px', right: '24px', left: 'auto', bottom: 'auto' }}
         onKeyDown={handleKeyDown}
       >
         {/* Close icon */}

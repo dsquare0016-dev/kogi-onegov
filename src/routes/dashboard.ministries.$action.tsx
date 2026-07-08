@@ -32,9 +32,6 @@ function MinistryActionPage() {
   const [name, setName] = useState('');
   const [mandate, setMandate] = useState('');
   const [budget, setBudget] = useState('');
-  const [staffCount, setStaffCount] = useState('');
-  const [deptsCount, setDeptsCount] = useState('');
-  const [agenciesCount, setAgenciesCount] = useState('');
   
   // Edit Form States
   const [editCommName, setEditCommName] = useState('');
@@ -204,47 +201,15 @@ function MinistryActionPage() {
               ></textarea>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-foreground">Allocated Budget (₦ Millions)</label>
-                <input 
-                  type="number" 
-                  value={budget}
-                  onChange={e => setBudget(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. 5000" 
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-foreground">Total Staff</label>
-                <input 
-                  type="number" 
-                  value={staffCount}
-                  onChange={e => setStaffCount(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="Total staff" 
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-foreground">Departments</label>
-                <input 
-                  type="number" 
-                  value={deptsCount}
-                  onChange={e => setDeptsCount(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="Depts count" 
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-foreground">Agencies parastatals</label>
-                <input 
-                  type="number" 
-                  value={agenciesCount}
-                  onChange={e => setAgenciesCount(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="Agencies count" 
-                />
-              </div>
+            <div className="space-y-1.5 max-w-xs pt-2">
+              <label className="text-sm font-semibold text-foreground">Allocated Budget (₦ Millions)</label>
+              <input 
+                type="number" 
+                value={budget}
+                onChange={e => setBudget(e.target.value)}
+                className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
+                placeholder="e.g. 5000" 
+              />
             </div>
 
             <div className="pt-4 flex justify-end">
@@ -347,15 +312,7 @@ function MinistryActionPage() {
                         placeholder="e.g. comm@kogi.gov.ng" 
                       />
                     </div>
-                    <div className="space-y-1 pt-2 border-t border-border/50">
-                      <label className="text-xs font-bold text-muted-foreground uppercase">Allocated Budget (₦ Millions)</label>
-                      <input 
-                        type="number" 
-                        value={editBudget}
-                        onChange={e => setEditBudget(e.target.value)}
-                        className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary font-mono" 
-                      />
-                    </div>
+                    {/* Budget is computed dynamically based on projects/nominal roll and not edited here */}
                   </div>
                 </div>
               )}

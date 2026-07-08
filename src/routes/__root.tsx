@@ -241,6 +241,12 @@ function RootComponent() {
             window.dispatchEvent(new Event('themeUpdate'));
           }
 
+          // Sync alignmentLevel
+          if (data.alignmentLevel) {
+            const { useSettingsStore } = await import('@/lib/settingsStore');
+            useSettingsStore.getState().setGovernanceAlignmentLevel(data.alignmentLevel);
+          }
+
           // Sync bannerStore
           const { bannerStore } = await import('@/lib/banner-store');
           if (data.activeBanner !== undefined) {

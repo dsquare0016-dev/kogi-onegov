@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Network, ShieldAlert, Crosshair, TrendingUp, AlertTriangle, CheckCircle2, ShieldCheck, Info, X, Edit2, Check, ExternalLink, ArrowDown, Database, Target, Building, Layers, FolderKanban, Activity, CheckSquare, Users, LineChart, Award } from 'lucide-react';
+import { Network, ShieldAlert, Crosshair, TrendingUp, AlertTriangle, CheckCircle2, ShieldCheck, Info, X, Edit2, Check, ExternalLink, ArrowDown, Database, Target, Building, Layers, FolderKanban, Activity, CheckSquare, Users, LineChart, Award, Loader2 } from 'lucide-react';
 import { devPlanStore, Pillar } from '@/lib/devPlanStore';
 import { useSettingsStore } from '@/lib/settingsStore';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
+import { dbGetProgrammesAndProjects, dbGetSystemSetting, dbSaveSystemSetting } from '@/lib/postgres-service';
 
 export const Route = createFileRoute('/dashboard/alignment-engine')({
   component: AlignmentEnginePage,
@@ -17,6 +18,44 @@ function AlignmentEnginePage() {
   // Modals state
   const [globalScoreModalOpen, setGlobalScoreModalOpen] = useState(false);
   const [rogueSpendModalOpen, setRogueSpendModalOpen] = useState(false);
+
+  // Dynamic Data States
+  const [data, setData] = useState<{ programmes: any[]; projects: any[] }>({ programmes: [], projects: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await dbGetProgrammesAndProjects();
+        setData(res);
+      } catch (err) {
+        console.error("Failed to load alignment data:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  const handleToggleEnforcement = async () => {
+    const newLevel = strictMode ? 2 : 3;
+    setGovernanceAlignmentLevel(newLevel);
+    try {
+      const config = await dbGetSystemSetting({ data: { key: 'site_configuration' } });
+      const payload = config ? { ...config } : {};
+      payload.alignmentLevel = newLevel;
+      
+      await dbSaveSystemSetting({
+        data: {
+          key: 'site_configuration',
+          value: payload
+        }
+      });
+      console.log("Successfully updated alignment level to", newLevel);
+    } catch (err: any) {
+      console.error("Failed to save alignment level:", err.message);
+    }
+  };
 
   const FLOW_NODES = [
     { label: "Development Plan Pillar", icon: <Database className="size-5" /> },
@@ -91,9 +130,9 @@ function AlignmentEnginePage() {
                    <h3 className="font-semibold text-emerald-800 dark:text-emerald-200">Global Alignment Score</h3>
                  </div>
                  <div className="flex items-baseline gap-2">
-                   <span className="text-4xl font-black text-emerald-700 dark:text-emerald-400">84%</span>
+                   <span className="text-4xl font-black text-emerald-700 dark:text-emerald-400">{score}%</span>
                  </div>
-                 <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 mt-2">84% of all approved state budgets directly map to a Strategic Pillar.</p>
+                 <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 mt-2">{score}% of all approved state budgets directly map to a Strategic Pillar.</p>
                </CardContent>
              </Card>
 
@@ -108,7 +147,7 @@ function AlignmentEnginePage() {
                    <h3 className="font-semibold text-amber-800 dark:text-amber-200">Rogue Spending Detected</h3>
                  </div>
                  <div className="flex items-baseline gap-2">
-                   <span className="text-4xl font-black text-amber-700 dark:text-amber-400">₦3.1B</span>
+                   <span className="text-4xl font-black text-amber-700 dark:text-amber-400">{formatNaira(rogueBudget)}</span>
                  </div>
                  <p className="text-xs text-amber-600/80 dark:text-amber-400/80 mt-2">Budgets allocated to projects with no defined link to a Strategic Objective.</p>
                </CardContent>
@@ -133,28 +172,25 @@ function AlignmentEnginePage() {
                      </tr>
                    </thead>
                    <tbody className="divide-y divide-border/30">
-                     {[
-                       { prog: "Agricultural Transformation", mda: "Agriculture & Food Security", pillar: "Agriculture & Food Security", status: "Aligned" },
-                       { prog: "Digital Identification Rollout", mda: "Innovation, Science & Tech", pillar: "Digital Economy", status: "Aligned" },
-                       { prog: "State Secretariate Renovation", mda: "Works", pillar: "Infrastructure", status: "Partially Aligned" },
-                       { prog: "Directorate Fleet Procurement", mda: "Special Duties", pillar: "None", status: "Not Aligned" },
-                       { prog: "Free Basic Education", mda: "Education", pillar: "Education", status: "Aligned" },
-                     ].map((row, i) => (
-                       <tr key={i} className="hover:bg-muted/10 transition-colors">
-                         <td className="px-6 py-4 font-bold text-foreground">{row.prog}</td>
-                         <td className="px-6 py-4 text-muted-foreground">{row.mda}</td>
-                         <td className="px-6 py-4 text-muted-foreground">{row.pillar}</td>
-                         <td className="px-6 py-4 text-right">
-                           <span className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full ${
-                             row.status === 'Aligned' ? 'bg-emerald-500/10 text-emerald-600' :
-                             row.status === 'Partially Aligned' ? 'bg-amber-500/10 text-amber-600' :
-                             'bg-rose-500/10 text-rose-600'
-                           }`}>
-                             {row.status}
-                           </span>
-                         </td>
-                       </tr>
-                     ))}
+                     {displayProgrammes.map((row: any, i) => {
+                       const status = getAlignmentStatus(row);
+                       return (
+                         <tr key={i} className="hover:bg-muted/10 transition-colors">
+                           <td className="px-6 py-4 font-bold text-foreground">{row.name}</td>
+                           <td className="px-6 py-4 text-muted-foreground">{row.mda || row.org_code}</td>
+                           <td className="px-6 py-4 text-muted-foreground">{row.pillar || 'None'}</td>
+                           <td className="px-6 py-4 text-right">
+                             <span className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full ${
+                               status === 'Aligned' ? 'bg-emerald-500/10 text-emerald-600' :
+                               status === 'Partially Aligned' ? 'bg-amber-500/10 text-amber-600' :
+                               'bg-rose-500/10 text-rose-600'
+                             }`}>
+                               {status}
+                             </span>
+                           </td>
+                         </tr>
+                       );
+                     })}
                    </tbody>
                  </table>
                </div>
@@ -162,18 +198,34 @@ function AlignmentEnginePage() {
            </Card>
 
            {/* Enforcement Banner */}
-           <div className="bg-primary border border-primary text-primary-foreground rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+           <div className={`border rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl relative overflow-hidden transition-colors ${
+             strictMode 
+               ? 'bg-primary border-primary text-primary-foreground' 
+               : 'bg-muted border-border text-foreground'
+           }`}>
               <div className="absolute -right-10 -top-10 opacity-10 pointer-events-none">
                  <ShieldCheck className="size-48" />
               </div>
               <div className="relative z-10">
-                 <h3 className="text-xl font-black tracking-tight mb-2">Strict Mode Active</h3>
-                 <p className="text-primary-foreground/80 text-sm max-w-lg">
-                   The system is currently hard-blocking any budget approval, task assignment, or project creation that cannot be fully traced up to the Development Plan.
+                 <h3 className="text-xl font-black tracking-tight mb-2">
+                   {strictMode ? 'Strict Mode Active' : 'Adaptive Mode Active (Level 2)'}
+                 </h3>
+                 <p className={`text-sm max-w-lg ${strictMode ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                   {strictMode 
+                     ? 'The system is currently hard-blocking any budget approval, task assignment, or project creation that cannot be fully traced up to the Development Plan.'
+                     : 'The system currently issues warnings but allows budget approvals and project creations that lack a defined link to the Development Plan.'
+                   }
                  </p>
               </div>
               <div className="relative z-10 shrink-0">
-                 <button onClick={() => setGovernanceAlignmentLevel(strictMode ? 2 : 3)} className="px-6 py-3 bg-white text-primary rounded-lg font-bold shadow-sm hover:bg-white/90 transition-colors">
+                 <button 
+                   onClick={handleToggleEnforcement} 
+                   className={`px-6 py-3 rounded-lg font-bold shadow-sm transition-colors cursor-pointer ${
+                     strictMode 
+                       ? 'bg-white text-primary hover:bg-white/90' 
+                       : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                   }`}
+                 >
                    {strictMode ? 'Disable Enforcement (Set Level 2)' : 'Enable Strict Mode (Set Level 3)'}
                  </button>
               </div>
