@@ -36,6 +36,36 @@ export function CustomSystemModal() {
     }
   };
 
+  if (type === 'alert') {
+    return (
+      <div 
+        className="fixed top-[84px] right-6 z-[10000] w-full max-w-[420px] rounded-r-xl rounded-l-md bg-card border border-border border-l-4 border-l-red-500 shadow-2xl p-5 pr-10 relative flex flex-col gap-3 text-foreground animate-in slide-in-from-top-4 fade-in duration-300"
+        onKeyDown={handleKeyDown}
+      >
+        {/* Close icon */}
+        <button 
+          onClick={() => close(false)}
+          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <X className="size-4" />
+        </button>
+
+        {/* Modal Header */}
+        <div className="flex items-center gap-2.5">
+          <AlertCircle className="size-5 text-red-500 shrink-0" />
+          <h3 className="text-xs font-black uppercase tracking-wider text-[#0A1142] dark:text-blue-100">
+            NOTIFICATION ALERT
+          </h3>
+        </div>
+
+        {/* Message */}
+        <div className="text-xs leading-relaxed text-foreground/90 font-medium whitespace-pre-wrap">
+          {message}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 animate-in fade-in duration-150"

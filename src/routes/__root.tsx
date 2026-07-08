@@ -1,4 +1,4 @@
-import { dbGetMaintenanceSettings } from '@/lib/postgres-service';
+import { dbGetMaintenanceSettings, dbGetSystemSetting } from '@/lib/postgres-service';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -201,6 +201,82 @@ function RootComponent() {
       };
     }
   }, []);
+
+  // System Configuration Sync Effect
+  useEffect(() => {
+    if (!mounted) return;
+
+    const syncConfig = async () => {
+      try {
+        const data = await dbGetSystemSetting({ data: { key: 'site_configuration' } });
+        if (data) {
+          const keys = [
+            ['gdu_site_name', data.siteName],
+            ['gdu_site_title', data.siteTitle],
+            ['gdu_short_name', data.shortName],
+            ['gdu_org_name', data.orgName],
+            ['gdu_gov_name', data.govName],
+            ['gdu_copyright', data.copyright],
+            ['gdu_main_logo', data.mainLogo],
+            ['gdu_state_seal', data.stateSeal],
+            ['gdu_gdu_logo', data.gduLogo],
+            ['gdu_login_bg', data.loginBg],
+            ['gdu_watermark', data.watermark],
+            ['gdu_portal_theme', data.activeTheme]
+          ];
+          
+          keys.forEach(([k, v]) => {
+            if (v !== undefined && v !== null) {
+              localStorage.setItem(k, String(v));
+            }
+          });
+
+          // Sync page title
+          if (data.siteTitle) {
+            document.title = data.siteTitle;
+          }
+
+          // Sync theme
+          if (data.activeTheme) {
+            window.dispatchEvent(new Event('themeUpdate'));
+          }
+
+          // Sync bannerStore
+          const { bannerStore } = await import('@/lib/banner-store');
+          if (data.activeBanner !== undefined) {
+            bannerStore.setActiveBanner(data.activeBanner);
+          }
+          if (data.greetings) {
+            bannerStore.setGreetings(data.greetings);
+          }
+
+          // Sync carouselStore
+          const { carouselStore } = await import('@/lib/carouselStore');
+          if (data.slides) {
+            carouselStore.slides = data.slides;
+          }
+
+          // Sync workingHoursStore
+          const { workingHoursStore } = await import('@/lib/working-hours-store');
+          if (data.startHour !== undefined || data.endHour !== undefined || data.holidays !== undefined) {
+            localStorage.setItem('gdu_working_hours_config', JSON.stringify({
+              startHour: data.startHour ?? workingHoursStore.startHour,
+              endHour: data.endHour ?? workingHoursStore.endHour,
+              holidays: data.holidays ?? workingHoursStore.holidays
+            }));
+            window.dispatchEvent(new Event('workingHoursUpdate'));
+          }
+
+          // Notify all config listeners
+          window.dispatchEvent(new Event('siteConfigUpdate'));
+        }
+      } catch (err) {
+        console.error("Failed to synchronize system configuration:", err);
+      }
+    };
+
+    syncConfig();
+  }, [mounted]);
 
   // Maintenance mode redirect check
   useEffect(() => {

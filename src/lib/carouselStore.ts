@@ -59,6 +59,15 @@ const defaultSlides: CarouselSlide[] = [
     bgImage: "/slide-3.jpg",
     author: "H.E. Governor Ahmed Usman Ododo",
     active: false
+  },
+  {
+    id: "5",
+    type: "quote",
+    title: "ON SECURITY, PEACE & PUBLIC SAFETY",
+    quote: "The Ododo administration remains committed to safeguarding lives and property across the state, declaring that no part of Kogi will be surrendered to criminal elements under any guise. Kogi State remains a peaceful and hospitable home for all law-abiding citizens regardless of ethnicity, religion, or occupation. However, criminality in any form will not be tolerated.",
+    bgImage: "/governor-security.jpg",
+    author: "H.E. Governor Ahmed Usman Ododo",
+    active: true
   }
 ];
 

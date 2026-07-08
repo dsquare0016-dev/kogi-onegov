@@ -1306,6 +1306,29 @@ export function AppShell({ children }: { children: ReactNode }) {
     return 'default';
   });
 
+  const [siteName, setSiteName] = useState("Kogi OneGov");
+  const [govName, setGovName] = useState("Kogi State Government");
+  const [orgName, setOrgName] = useState("Government Delivery Unit");
+  const [copyright, setCopyright] = useState("© 2026 Kogi State Government. All Rights Reserved.");
+  const [mainLogo, setMainLogo] = useState("/kogi-logo.png");
+  const [gduLogo, setGduLogo] = useState("/gdu-logo.png");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const getStored = () => {
+        setSiteName(localStorage.getItem("gdu_site_name") || "Kogi OneGov");
+        setGovName(localStorage.getItem("gdu_gov_name") || "Kogi State Government");
+        setOrgName(localStorage.getItem("gdu_org_name") || "Government Delivery Unit");
+        setCopyright(localStorage.getItem("gdu_copyright") || `© ${new Date().getFullYear()} ${localStorage.getItem("gdu_gov_name") || "Kogi State Government"}. All Rights Reserved.`);
+        setMainLogo(localStorage.getItem("gdu_main_logo") || "/kogi-logo.png");
+        setGduLogo(localStorage.getItem("gdu_gdu_logo") || "/gdu-logo.png");
+      };
+      getStored();
+      window.addEventListener("siteConfigUpdate", getStored);
+      return () => window.removeEventListener("siteConfigUpdate", getStored);
+    }
+  }, []);
+
   useEffect(() => {
     const handleThemeUpdate = () => {
       setActiveTheme(localStorage.getItem('gdu_portal_theme') || 'default');
@@ -1561,15 +1584,22 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex items-center gap-3">
            <div className="flex items-center -space-x-2">
               <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center border-2 border-[#C5A059] overflow-hidden shadow-md z-10 relative">
-                 <img src="/kogi-logo.png" alt="Kogi State" className="w-full h-full object-cover" />
+                 <img src={mainLogo} alt={siteName} className="w-full h-full object-cover" />
               </div>
               <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center border-2 border-[#C5A059] overflow-hidden shadow-md">
-                 <img src="/gdu-logo.png" alt="GDU" className="w-full h-full object-cover" />
+                 <img src={gduLogo} alt={orgName} className="w-full h-full object-cover" />
               </div>
            </div>
           <div className="flex flex-col">
-            <span className="font-black text-[13px] leading-tight tracking-tight text-white mb-0.5">Kogi <span className="text-[#C5A059]">OneGov</span></span>
-            <span className="text-[8px] text-blue-200/70 tracking-widest font-bold uppercase">Kogi State Government</span>
+            <span className="font-black text-[13px] leading-tight tracking-tight text-white mb-0.5">
+              {(() => {
+                const parts = siteName.split(" ");
+                const firstWord = parts[0] || "Kogi";
+                const restOfWords = parts.slice(1).join(" ") || "OneGov";
+                return <>{firstWord} <span className="text-[#C5A059]">{restOfWords}</span></>;
+              })()}
+            </span>
+            <span className="text-[8px] text-blue-200/70 tracking-widest font-bold uppercase">{govName}</span>
           </div>
         </div>
         {/* Close button only visible on mobile */}
@@ -1708,7 +1738,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="md:hidden"><Logo size={28} /></div>
           
           <div className="hidden md:flex items-center gap-2 text-[13px]">
-            <span className="font-semibold text-muted-foreground/80">Kogi State Government</span>
+            <span className="font-semibold text-muted-foreground/80">{govName}</span>
             <ChevronRight className="size-3.5 text-muted-foreground/50 mx-1" />
             <span className="font-bold text-foreground px-2.5 py-1 rounded-md bg-accent/50 border border-border/50 shadow-sm">{getGreeting(session.name)}</span>
             <LiveClockWidget />
@@ -1829,7 +1859,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </header>
         <main className="flex-1 min-h-0 overflow-y-auto custom-scrollbar bg-background flex flex-col">{children}</main>
         <footer className="border-t border-border py-3 px-6 text-[11px] text-muted-foreground flex flex-wrap justify-between gap-2 bg-card/40 shrink-0">
-          <div>© {new Date().getFullYear()} Kogi State Government • Governance Delivery Unit</div>
+          <div>{copyright}</div>
           <div className="flex items-center gap-2"><Map className="size-3" /> Confluence of Opportunities</div>
         </footer>
         <ChatbotWidget />

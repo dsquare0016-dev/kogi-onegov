@@ -7,7 +7,7 @@ import { Shield, Sparkles, Lock, KeyRound, Mail, Smartphone, Fingerprint, Eye, E
 import { customPrompt } from "@/lib/customModal";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in · Kogi OneGov" }] }),
+  head: () => ({ meta: [{ title: "Sign in" }] }),
   component: Login,
 });
 
@@ -18,6 +18,22 @@ function Login() {
   const [password, setPassword] = useState("••••••••");
   const [showPassword, setShowPassword] = useState(false);
   const [loginSettings, setLoginSettings] = useState<any>(null);
+  const [siteName, setSiteName] = useState("Kogi OneGov");
+  const [loginBg, setLoginBg] = useState("/login-bg.jpg");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const getStored = () => {
+        setSiteName(localStorage.getItem("gdu_site_name") || "Kogi OneGov");
+        setLoginBg(localStorage.getItem("gdu_login_bg") || "/login-bg.jpg");
+        const storedTitle = localStorage.getItem("gdu_site_title") || "Kogi OneGov Enterprise ERP";
+        document.title = `Sign in · ${storedTitle}`;
+      };
+      getStored();
+      window.addEventListener("siteConfigUpdate", getStored);
+      return () => window.removeEventListener("siteConfigUpdate", getStored);
+    }
+  }, []);
 
   // Forgot password modal states
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -48,56 +64,48 @@ function Login() {
   };
 
   const handleSendCode = async () => {
-    if (!verifiedUser) return;
+    if (!verifiedUser?.email) return;
     setIsSendingCode(true);
     try {
-      
       await dbSendResetCode({ data: { email: verifiedUser.email } });
       setIsCodeRequested(true);
-      alert(`Verification code has been dispatched to ${verifiedUser.email}`);
+      alert("Verification code sent to registered email/phone.");
     } catch (err: any) {
-      alert(err.message || "Failed to send verification code.");
+      alert(err.message || "Failed to send reset code.");
     } finally {
       setIsSendingCode(false);
     }
   };
 
   const handleVerifyCode = async () => {
-    if (!verificationCode || !verifiedUser) return;
+    if (!verificationCode.trim() || !verifiedUser?.email) return;
     setIsConfirmingCode(true);
     try {
-      
-      await dbVerifyResetCode({ data: { email: verifiedUser.email, code: verificationCode } });
-      setIsCodeConfirmed(true);
-      alert("Verification code confirmed successfully.");
+      const res = await dbVerifyResetCode({ data: { email: verifiedUser.email, code: verificationCode } });
+      if (res.valid) {
+        setIsCodeConfirmed(true);
+      } else {
+        alert("Invalid or expired verification code.");
+      }
     } catch (err: any) {
-      alert(err.message || "Invalid code.");
+      alert(err.message || "Code verification failed.");
     } finally {
       setIsConfirmingCode(false);
     }
   };
 
   const handleResetPassword = async () => {
-    if (newPassword !== confirmPassword) {
+    if (!newPassword || newPassword !== confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
-    if (newPassword.length < 8) {
-      alert("Password must be at least 8 characters long.");
-      return;
-    }
+    if (!verifiedUser?.email) return;
     setIsResettingPassword(true);
     try {
-      
-      await dbResetPasswordWithCode({
-        data: {
-          email: verifiedUser.email,
-          code: verificationCode,
-          newPass: newPassword
-        }
-      });
-      alert("New password saved. You can now login.");
+      await dbResetPasswordWithCode({ data: { email: verifiedUser.email, newPassword } });
+      alert("Password has been reset successfully. Please log in with your new password.");
       setIsResetModalOpen(false);
+      // Reset state
       setResetEmailOrId("");
       setVerifiedUser(null);
       setIsCodeRequested(false);
@@ -106,7 +114,7 @@ function Login() {
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: any) {
-      alert(err.message || "Failed to reset password.");
+      alert(err.message || "Password reset failed.");
     } finally {
       setIsResettingPassword(false);
     }
@@ -140,13 +148,15 @@ function Login() {
           return;
         }
         
-        const sessionData = authResult.sessionData as any;
-        if (typeof window !== 'undefined' && sessionData) {
-          const perms = sessionData.permissions || [];
-          localStorage.setItem(`gdu_permissions_${sessionData.email}`, JSON.stringify(perms));
-          window.dispatchEvent(new Event('sidebarUpdate'));
-        }
-        signIn(sessionData.role, sessionData);
+        const sessionStore = await import('@/lib/auth');
+        sessionStore.signIn(authResult.roleId, {
+          name: authResult.name,
+          email: authResult.email,
+          role: authResult.roleName,
+          staffId: authResult.staffId,
+          mda: authResult.mda
+        });
+        
         nav({ to: "/dashboard" });
         return;
       }
@@ -167,7 +177,15 @@ function Login() {
 
   return (
     <div className="min-h-dvh grid lg:grid-cols-2 bg-background relative text-foreground">
-      <div className="relative hidden lg:flex flex-col justify-between p-10 navy-gradient text-white overflow-hidden">
+      <div 
+        className="relative hidden lg:flex flex-col justify-between p-10 text-white overflow-hidden"
+        style={{
+          backgroundImage: loginBg ? `linear-gradient(to bottom, rgba(10, 17, 66, 0.85), rgba(10, 17, 66, 0.95)), url(${loginBg})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundColor: '#0A1142'
+        }}
+      >
         <div className="absolute -top-20 -right-20 size-[480px] rounded-full bg-gold/20 blur-3xl" />
         <div className="absolute -bottom-32 -left-20 size-[420px] rounded-full bg-info/20 blur-3xl" />
         <div className="relative z-10">
@@ -175,7 +193,7 @@ function Login() {
         </div>
         <div className="relative z-10 max-w-md space-y-4">
           <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-gold">
-            <Sparkles className="size-3.5" /> Digital Government Operating System
+            <Sparkles className="size-3.5" /> Digital Governance Operating System
           </div>
           <h1 className="text-4xl font-black leading-tight text-white uppercase">
             {loginSettings?.hero_text || "One platform for every governance decision in Kogi State."}
@@ -195,7 +213,7 @@ function Login() {
             <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
               <Shield className="size-3.5 text-gold" /> Government Portal
             </div>
-            <h2 className="text-3xl font-black tracking-tight uppercase text-primary">Login to Kogi OneGov</h2>
+            <h2 className="text-3xl font-black tracking-tight uppercase text-primary">Login to {siteName}</h2>
             <p className="text-xs text-muted-foreground">
               {loginSettings?.welcome_message || "Use your authorized staff credentials to log in. Audit logging is active."}
             </p>

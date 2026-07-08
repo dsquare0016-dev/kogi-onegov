@@ -95,17 +95,15 @@ function AdminConfigurationComponent() {
 
         if (data.alignmentLevel) setGovernanceAlignmentLevel(data.alignmentLevel);
         if (data.communicationHub !== undefined) setCommunicationHubEnabled(data.communicationHub);
-        if (data.startHour) {
-          workingHoursStore.setStartHour(data.startHour);
-          setStartHour(data.startHour);
-        }
-        if (data.endHour) {
-          workingHoursStore.setEndHour(data.endHour);
-          setEndHour(data.endHour);
-        }
-        if (data.holidays) {
-          workingHoursStore.setHolidays(data.holidays);
-          setHolidays(data.holidays);
+        if (data.startHour || data.endHour || data.holidays) {
+          workingHoursStore.updateConfig({
+            startHour: data.startHour ?? undefined,
+            endHour: data.endHour ?? undefined,
+            holidays: data.holidays ?? undefined
+          });
+          if (data.startHour) setStartHour(data.startHour);
+          if (data.endHour) setEndHour(data.endHour);
+          if (data.holidays) setHolidays(data.holidays);
         }
         if (data.activeTheme) {
           setActiveTheme(data.activeTheme);
@@ -133,7 +131,6 @@ function AdminConfigurationComponent() {
   }, []);
 
   const handleSaveAll = async (extraPayload = {}) => {
-    
     try {
       const payload = {
         siteName,
@@ -164,7 +161,33 @@ function AdminConfigurationComponent() {
           value: payload
         }
       });
-      // Skip window alert to avoid blocking UX, console log status
+      
+      // Update local storage and trigger update events immediately for active tab sessions
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('gdu_site_name', payload.siteName);
+        localStorage.setItem('gdu_site_title', payload.siteTitle);
+        localStorage.setItem('gdu_short_name', payload.shortName);
+        localStorage.setItem('gdu_org_name', payload.orgName);
+        localStorage.setItem('gdu_gov_name', payload.govName);
+        localStorage.setItem('gdu_copyright', payload.copyright);
+        localStorage.setItem('gdu_main_logo', payload.mainLogo);
+        localStorage.setItem('gdu_state_seal', payload.stateSeal);
+        localStorage.setItem('gdu_gdu_logo', payload.gduLogo);
+        localStorage.setItem('gdu_login_bg', payload.loginBg);
+        localStorage.setItem('gdu_watermark', payload.watermark);
+        localStorage.setItem('gdu_portal_theme', payload.activeTheme);
+        
+        if (payload.siteTitle) {
+          document.title = payload.siteTitle;
+        }
+
+        window.dispatchEvent(new Event('siteConfigUpdate'));
+        window.dispatchEvent(new Event('themeUpdate'));
+        window.dispatchEvent(new Event('bannerUpdate'));
+        window.dispatchEvent(new Event('carouselUpdate'));
+        window.dispatchEvent(new Event('workingHoursUpdate'));
+      }
+      
       console.log("Configuration saved successfully to PostgreSQL database!");
     } catch (e: any) {
       console.error("Failed to save configuration: " + e.message);
