@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart3, LineChart, PieChart, Activity, TrendingUp, Calendar, Filter } from 'lucide-react';
@@ -7,6 +8,21 @@ export const Route = createFileRoute('/dashboard/budget/intel/analytics')({
 });
 
 function BudgetAnalyticsPage() {
+  const [activeYear, setActiveYear] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return Number(localStorage.getItem('gdu_operational_year') || '2026');
+    }
+    return 2026;
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setActiveYear(Number(localStorage.getItem('gdu_operational_year') || '2026'));
+    };
+    window.addEventListener('siteConfigUpdate', handleUpdate);
+    return () => window.removeEventListener('siteConfigUpdate', handleUpdate);
+  }, []);
+
   return (
     <div className="p-6 max-w-[1400px] mx-auto space-y-6 pb-24">
       <div className="flex justify-between items-end">
@@ -17,7 +33,7 @@ function BudgetAnalyticsPage() {
           </p>
         </div>
         <div className="flex gap-2">
-           <button className="px-4 py-2 border border-border rounded-md text-sm font-semibold hover:bg-muted transition-colors flex items-center gap-2"><Calendar className="size-4"/> Q1-Q4 2026</button>
+           <button className="px-4 py-2 border border-border rounded-md text-sm font-semibold hover:bg-muted transition-colors flex items-center gap-2"><Calendar className="size-4"/> Q1-Q4 {activeYear}</button>
            <button className="px-4 py-2 border border-border rounded-md text-sm font-semibold hover:bg-muted transition-colors flex items-center gap-2"><Filter className="size-4"/> Filter by Sector</button>
         </div>
       </div>

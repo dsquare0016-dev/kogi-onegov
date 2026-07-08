@@ -33,7 +33,6 @@ import { Route as DashboardMyTeamRouteImport } from './routes/dashboard.my-team'
 import { Route as DashboardMinistriesRouteImport } from './routes/dashboard.ministries'
 import { Route as DashboardMapRouteImport } from './routes/dashboard.map'
 import { Route as DashboardIntelligenceRouteImport } from './routes/dashboard.intelligence'
-import { Route as DashboardGovernanceRouteImport } from './routes/dashboard.governance'
 import { Route as DashboardFinancialRouteImport } from './routes/dashboard.financial'
 import { Route as DashboardExecutiveRoomRouteImport } from './routes/dashboard.executive-room'
 import { Route as DashboardExecutiveOfficesRouteImport } from './routes/dashboard.executive-offices'
@@ -76,7 +75,6 @@ import { Route as DashboardTasksCreationRouteImport } from './routes/dashboard.t
 import { Route as DashboardTasksAssignmentRouteImport } from './routes/dashboard.tasks.assignment'
 import { Route as DashboardTasksApprovalRouteImport } from './routes/dashboard.tasks.approval'
 import { Route as DashboardTasksActivityIdRouteImport } from './routes/dashboard.tasks.$activityId'
-import { Route as DashboardStructureOfficeIdRouteImport } from './routes/dashboard.structure.$officeId'
 import { Route as DashboardStaffViewRouteImport } from './routes/dashboard.staff.view'
 import { Route as DashboardStaffVerificationRouteImport } from './routes/dashboard.staff.verification'
 import { Route as DashboardStaffUploadRouteImport } from './routes/dashboard.staff.upload'
@@ -112,11 +110,9 @@ import { Route as DashboardMinistriesActionRouteImport } from './routes/dashboar
 import { Route as DashboardMemoActionRouteImport } from './routes/dashboard.memo.$action'
 import { Route as DashboardGduCenterRequestsRouteImport } from './routes/dashboard.gdu-center.requests'
 import { Route as DashboardExecutiveRoomSpiRouteImport } from './routes/dashboard.executive-room.spi'
-import { Route as DashboardExecutiveRoomRisksRouteImport } from './routes/dashboard.executive-room.risks'
 import { Route as DashboardExecutiveRoomProjectsRouteImport } from './routes/dashboard.executive-room.projects'
 import { Route as DashboardExecutiveRoomMinistriesRouteImport } from './routes/dashboard.executive-room.ministries'
 import { Route as DashboardExecutiveRoomCommissionersRouteImport } from './routes/dashboard.executive-room.commissioners'
-import { Route as DashboardExecutiveRoomBudgetsRouteImport } from './routes/dashboard.executive-room.budgets'
 import { Route as DashboardExecutiveOfficesActionRouteImport } from './routes/dashboard.executive-offices.$action'
 import { Route as DashboardDevPlanSpiFormulaRouteImport } from './routes/dashboard.dev-plan.spi-formula'
 import { Route as DashboardDevPlanPillarsRouteImport } from './routes/dashboard.dev-plan.pillars'
@@ -124,8 +120,6 @@ import { Route as DashboardDevPlanMdasMappingRouteImport } from './routes/dashbo
 import { Route as DashboardDevPlanKpiFrameworkRouteImport } from './routes/dashboard.dev-plan.kpi-framework'
 import { Route as DashboardDeskOfficersTrainingRouteImport } from './routes/dashboard.desk-officers.training'
 import { Route as DashboardDeskOfficersReplacementRouteImport } from './routes/dashboard.desk-officers.replacement'
-import { Route as DashboardDeskOfficersRedeploymentRouteImport } from './routes/dashboard.desk-officers.redeployment'
-import { Route as DashboardDeskOfficersCertificationRouteImport } from './routes/dashboard.desk-officers.certification'
 import { Route as DashboardDeskOfficersAssignRouteImport } from './routes/dashboard.desk-officers.assign'
 import { Route as DashboardDepartmentsActionRouteImport } from './routes/dashboard.departments.$action'
 import { Route as DashboardCommunicationGroupsRouteImport } from './routes/dashboard.communication.groups'
@@ -137,16 +131,10 @@ import { Route as DashboardCommandCenterEscalationRouteImport } from './routes/d
 import { Route as DashboardCommandCenterDevelopmentPlanRouteImport } from './routes/dashboard.command-center.development-plan'
 import { Route as DashboardCommandCenterCommunicationRouteImport } from './routes/dashboard.command-center.communication'
 import { Route as DashboardCommandCenterBudgetRouteImport } from './routes/dashboard.command-center.budget'
-import { Route as DashboardBudgetUploadRouteImport } from './routes/dashboard.budget.upload'
-import { Route as DashboardBudgetTemplatesRouteImport } from './routes/dashboard.budget.templates'
-import { Route as DashboardBudgetSupplementaryRouteImport } from './routes/dashboard.budget.supplementary'
-import { Route as DashboardBudgetRevisedRouteImport } from './routes/dashboard.budget.revised'
 import { Route as DashboardBudgetReportsRouteImport } from './routes/dashboard.budget.reports'
-import { Route as DashboardBudgetProposalRouteImport } from './routes/dashboard.budget.proposal'
 import { Route as DashboardBudgetParametersRouteImport } from './routes/dashboard.budget.parameters'
+import { Route as DashboardBudgetMdaLinesRouteImport } from './routes/dashboard.budget.mda-lines'
 import { Route as DashboardBudgetDistributionRouteImport } from './routes/dashboard.budget.distribution'
-import { Route as DashboardBudgetDirectorReviewRouteImport } from './routes/dashboard.budget.director-review'
-import { Route as DashboardBudgetCategoriesRouteImport } from './routes/dashboard.budget.categories'
 import { Route as DashboardBudgetAnnualRouteImport } from './routes/dashboard.budget.annual'
 import { Route as DashboardBudgetAllocationRouteImport } from './routes/dashboard.budget.allocation'
 import { Route as DashboardAuditRiskFlagsRouteImport } from './routes/dashboard.audit.risk-flags'
@@ -154,7 +142,6 @@ import { Route as DashboardAuditQueriesRouteImport } from './routes/dashboard.au
 import { Route as DashboardAuditProcurementRouteImport } from './routes/dashboard.audit.procurement'
 import { Route as DashboardAuditComplianceRouteImport } from './routes/dashboard.audit.compliance'
 import { Route as DashboardAttendanceUploadRouteImport } from './routes/dashboard.attendance.upload'
-import { Route as DashboardAiOutputsRouteImport } from './routes/dashboard.ai.outputs'
 import { Route as DashboardAiAssistantRouteImport } from './routes/dashboard.ai.assistant'
 import { Route as DashboardAgenciesActionRouteImport } from './routes/dashboard.agencies.$action'
 import { Route as DashboardAdminSecurityRouteImport } from './routes/dashboard.admin.security'
@@ -171,7 +158,6 @@ import { Route as DashboardAdminAuditRouteImport } from './routes/dashboard.admi
 import { Route as DashboardAdminAttendanceBuilderRouteImport } from './routes/dashboard.admin.attendance-builder'
 import { Route as DashboardActivitiesMonitorRouteImport } from './routes/dashboard.activities.monitor'
 import { Route as DashboardActivitiesCreateRouteImport } from './routes/dashboard.activities.create'
-import { Route as DashboardActivitiesAssignRouteImport } from './routes/dashboard.activities.assign'
 import { Route as DashboardBudgetIntelRankingsRouteImport } from './routes/dashboard.budget.intel.rankings'
 import { Route as DashboardBudgetIntelGovernorRouteImport } from './routes/dashboard.budget.intel.governor'
 import { Route as DashboardBudgetIntelDevPlanRouteImport } from './routes/dashboard.budget.intel.dev-plan'
@@ -304,11 +290,6 @@ const DashboardMapRoute = DashboardMapRouteImport.update({
 const DashboardIntelligenceRoute = DashboardIntelligenceRouteImport.update({
   id: '/intelligence',
   path: '/intelligence',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardGovernanceRoute = DashboardGovernanceRouteImport.update({
-  id: '/governance',
-  path: '/governance',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardFinancialRoute = DashboardFinancialRouteImport.update({
@@ -536,12 +517,6 @@ const DashboardTasksActivityIdRoute =
     path: '/tasks/$activityId',
     getParentRoute: () => DashboardRoute,
   } as any)
-const DashboardStructureOfficeIdRoute =
-  DashboardStructureOfficeIdRouteImport.update({
-    id: '/structure/$officeId',
-    path: '/structure/$officeId',
-    getParentRoute: () => DashboardRoute,
-  } as any)
 const DashboardStaffViewRoute = DashboardStaffViewRouteImport.update({
   id: '/view',
   path: '/view',
@@ -733,12 +708,6 @@ const DashboardExecutiveRoomSpiRoute =
     path: '/spi',
     getParentRoute: () => DashboardExecutiveRoomRoute,
   } as any)
-const DashboardExecutiveRoomRisksRoute =
-  DashboardExecutiveRoomRisksRouteImport.update({
-    id: '/risks',
-    path: '/risks',
-    getParentRoute: () => DashboardExecutiveRoomRoute,
-  } as any)
 const DashboardExecutiveRoomProjectsRoute =
   DashboardExecutiveRoomProjectsRouteImport.update({
     id: '/projects',
@@ -755,12 +724,6 @@ const DashboardExecutiveRoomCommissionersRoute =
   DashboardExecutiveRoomCommissionersRouteImport.update({
     id: '/commissioners',
     path: '/commissioners',
-    getParentRoute: () => DashboardExecutiveRoomRoute,
-  } as any)
-const DashboardExecutiveRoomBudgetsRoute =
-  DashboardExecutiveRoomBudgetsRouteImport.update({
-    id: '/budgets',
-    path: '/budgets',
     getParentRoute: () => DashboardExecutiveRoomRoute,
   } as any)
 const DashboardExecutiveOfficesActionRoute =
@@ -802,18 +765,6 @@ const DashboardDeskOfficersReplacementRoute =
   DashboardDeskOfficersReplacementRouteImport.update({
     id: '/replacement',
     path: '/replacement',
-    getParentRoute: () => DashboardDeskOfficersRoute,
-  } as any)
-const DashboardDeskOfficersRedeploymentRoute =
-  DashboardDeskOfficersRedeploymentRouteImport.update({
-    id: '/redeployment',
-    path: '/redeployment',
-    getParentRoute: () => DashboardDeskOfficersRoute,
-  } as any)
-const DashboardDeskOfficersCertificationRoute =
-  DashboardDeskOfficersCertificationRouteImport.update({
-    id: '/certification',
-    path: '/certification',
     getParentRoute: () => DashboardDeskOfficersRoute,
   } as any)
 const DashboardDeskOfficersAssignRoute =
@@ -882,36 +833,9 @@ const DashboardCommandCenterBudgetRoute =
     path: '/command-center/budget',
     getParentRoute: () => DashboardRoute,
   } as any)
-const DashboardBudgetUploadRoute = DashboardBudgetUploadRouteImport.update({
-  id: '/upload',
-  path: '/upload',
-  getParentRoute: () => DashboardBudgetRoute,
-} as any)
-const DashboardBudgetTemplatesRoute =
-  DashboardBudgetTemplatesRouteImport.update({
-    id: '/templates',
-    path: '/templates',
-    getParentRoute: () => DashboardBudgetRoute,
-  } as any)
-const DashboardBudgetSupplementaryRoute =
-  DashboardBudgetSupplementaryRouteImport.update({
-    id: '/supplementary',
-    path: '/supplementary',
-    getParentRoute: () => DashboardBudgetRoute,
-  } as any)
-const DashboardBudgetRevisedRoute = DashboardBudgetRevisedRouteImport.update({
-  id: '/revised',
-  path: '/revised',
-  getParentRoute: () => DashboardBudgetRoute,
-} as any)
 const DashboardBudgetReportsRoute = DashboardBudgetReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
-  getParentRoute: () => DashboardBudgetRoute,
-} as any)
-const DashboardBudgetProposalRoute = DashboardBudgetProposalRouteImport.update({
-  id: '/proposal',
-  path: '/proposal',
   getParentRoute: () => DashboardBudgetRoute,
 } as any)
 const DashboardBudgetParametersRoute =
@@ -920,22 +844,15 @@ const DashboardBudgetParametersRoute =
     path: '/parameters',
     getParentRoute: () => DashboardBudgetRoute,
   } as any)
+const DashboardBudgetMdaLinesRoute = DashboardBudgetMdaLinesRouteImport.update({
+  id: '/mda-lines',
+  path: '/mda-lines',
+  getParentRoute: () => DashboardBudgetRoute,
+} as any)
 const DashboardBudgetDistributionRoute =
   DashboardBudgetDistributionRouteImport.update({
     id: '/distribution',
     path: '/distribution',
-    getParentRoute: () => DashboardBudgetRoute,
-  } as any)
-const DashboardBudgetDirectorReviewRoute =
-  DashboardBudgetDirectorReviewRouteImport.update({
-    id: '/director-review',
-    path: '/director-review',
-    getParentRoute: () => DashboardBudgetRoute,
-  } as any)
-const DashboardBudgetCategoriesRoute =
-  DashboardBudgetCategoriesRouteImport.update({
-    id: '/categories',
-    path: '/categories',
     getParentRoute: () => DashboardBudgetRoute,
   } as any)
 const DashboardBudgetAnnualRoute = DashboardBudgetAnnualRouteImport.update({
@@ -977,11 +894,6 @@ const DashboardAttendanceUploadRoute =
     path: '/attendance/upload',
     getParentRoute: () => DashboardRoute,
   } as any)
-const DashboardAiOutputsRoute = DashboardAiOutputsRouteImport.update({
-  id: '/ai/outputs',
-  path: '/ai/outputs',
-  getParentRoute: () => DashboardRoute,
-} as any)
 const DashboardAiAssistantRoute = DashboardAiAssistantRouteImport.update({
   id: '/ai/assistant',
   path: '/ai/assistant',
@@ -1069,12 +981,6 @@ const DashboardActivitiesCreateRoute =
   DashboardActivitiesCreateRouteImport.update({
     id: '/create',
     path: '/create',
-    getParentRoute: () => DashboardActivitiesRoute,
-  } as any)
-const DashboardActivitiesAssignRoute =
-  DashboardActivitiesAssignRouteImport.update({
-    id: '/assign',
-    path: '/assign',
     getParentRoute: () => DashboardActivitiesRoute,
   } as any)
 const DashboardBudgetIntelRankingsRoute =
@@ -1168,7 +1074,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/executive-offices': typeof DashboardExecutiveOfficesRouteWithChildren
   '/dashboard/executive-room': typeof DashboardExecutiveRoomRouteWithChildren
   '/dashboard/financial': typeof DashboardFinancialRoute
-  '/dashboard/governance': typeof DashboardGovernanceRoute
   '/dashboard/intelligence': typeof DashboardIntelligenceRoute
   '/dashboard/map': typeof DashboardMapRoute
   '/dashboard/ministries': typeof DashboardMinistriesRouteWithChildren
@@ -1185,7 +1090,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/workforce': typeof DashboardWorkforceRoute
   '/recruitment/status': typeof RecruitmentStatusRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/activities/assign': typeof DashboardActivitiesAssignRoute
   '/dashboard/activities/create': typeof DashboardActivitiesCreateRoute
   '/dashboard/activities/monitor': typeof DashboardActivitiesMonitorRoute
   '/dashboard/admin/attendance-builder': typeof DashboardAdminAttendanceBuilderRoute
@@ -1202,7 +1106,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/security': typeof DashboardAdminSecurityRoute
   '/dashboard/agencies/$action': typeof DashboardAgenciesActionRoute
   '/dashboard/ai/assistant': typeof DashboardAiAssistantRoute
-  '/dashboard/ai/outputs': typeof DashboardAiOutputsRoute
   '/dashboard/attendance/upload': typeof DashboardAttendanceUploadRoute
   '/dashboard/audit/compliance': typeof DashboardAuditComplianceRoute
   '/dashboard/audit/procurement': typeof DashboardAuditProcurementRoute
@@ -1210,16 +1113,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/audit/risk-flags': typeof DashboardAuditRiskFlagsRoute
   '/dashboard/budget/allocation': typeof DashboardBudgetAllocationRoute
   '/dashboard/budget/annual': typeof DashboardBudgetAnnualRoute
-  '/dashboard/budget/categories': typeof DashboardBudgetCategoriesRoute
-  '/dashboard/budget/director-review': typeof DashboardBudgetDirectorReviewRoute
   '/dashboard/budget/distribution': typeof DashboardBudgetDistributionRoute
+  '/dashboard/budget/mda-lines': typeof DashboardBudgetMdaLinesRoute
   '/dashboard/budget/parameters': typeof DashboardBudgetParametersRoute
-  '/dashboard/budget/proposal': typeof DashboardBudgetProposalRoute
   '/dashboard/budget/reports': typeof DashboardBudgetReportsRoute
-  '/dashboard/budget/revised': typeof DashboardBudgetRevisedRoute
-  '/dashboard/budget/supplementary': typeof DashboardBudgetSupplementaryRoute
-  '/dashboard/budget/templates': typeof DashboardBudgetTemplatesRoute
-  '/dashboard/budget/upload': typeof DashboardBudgetUploadRoute
   '/dashboard/command-center/budget': typeof DashboardCommandCenterBudgetRoute
   '/dashboard/command-center/communication': typeof DashboardCommandCenterCommunicationRoute
   '/dashboard/command-center/development-plan': typeof DashboardCommandCenterDevelopmentPlanRoute
@@ -1231,8 +1128,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/communication/groups': typeof DashboardCommunicationGroupsRoute
   '/dashboard/departments/$action': typeof DashboardDepartmentsActionRoute
   '/dashboard/desk-officers/assign': typeof DashboardDeskOfficersAssignRoute
-  '/dashboard/desk-officers/certification': typeof DashboardDeskOfficersCertificationRoute
-  '/dashboard/desk-officers/redeployment': typeof DashboardDeskOfficersRedeploymentRoute
   '/dashboard/desk-officers/replacement': typeof DashboardDeskOfficersReplacementRoute
   '/dashboard/desk-officers/training': typeof DashboardDeskOfficersTrainingRoute
   '/dashboard/dev-plan/kpi-framework': typeof DashboardDevPlanKpiFrameworkRoute
@@ -1240,11 +1135,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/dev-plan/pillars': typeof DashboardDevPlanPillarsRoute
   '/dashboard/dev-plan/spi-formula': typeof DashboardDevPlanSpiFormulaRoute
   '/dashboard/executive-offices/$action': typeof DashboardExecutiveOfficesActionRoute
-  '/dashboard/executive-room/budgets': typeof DashboardExecutiveRoomBudgetsRoute
   '/dashboard/executive-room/commissioners': typeof DashboardExecutiveRoomCommissionersRoute
   '/dashboard/executive-room/ministries': typeof DashboardExecutiveRoomMinistriesRoute
   '/dashboard/executive-room/projects': typeof DashboardExecutiveRoomProjectsRoute
-  '/dashboard/executive-room/risks': typeof DashboardExecutiveRoomRisksRoute
   '/dashboard/executive-room/spi': typeof DashboardExecutiveRoomSpiRoute
   '/dashboard/gdu-center/requests': typeof DashboardGduCenterRequestsRoute
   '/dashboard/memo/$action': typeof DashboardMemoActionRoute
@@ -1280,7 +1173,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/staff/upload': typeof DashboardStaffUploadRoute
   '/dashboard/staff/verification': typeof DashboardStaffVerificationRoute
   '/dashboard/staff/view': typeof DashboardStaffViewRoute
-  '/dashboard/structure/$officeId': typeof DashboardStructureOfficeIdRoute
   '/dashboard/tasks/$activityId': typeof DashboardTasksActivityIdRoute
   '/dashboard/tasks/approval': typeof DashboardTasksApprovalRoute
   '/dashboard/tasks/assignment': typeof DashboardTasksAssignmentRoute
@@ -1342,7 +1234,6 @@ export interface FileRoutesByTo {
   '/dashboard/executive-offices': typeof DashboardExecutiveOfficesRouteWithChildren
   '/dashboard/executive-room': typeof DashboardExecutiveRoomRouteWithChildren
   '/dashboard/financial': typeof DashboardFinancialRoute
-  '/dashboard/governance': typeof DashboardGovernanceRoute
   '/dashboard/intelligence': typeof DashboardIntelligenceRoute
   '/dashboard/map': typeof DashboardMapRoute
   '/dashboard/ministries': typeof DashboardMinistriesRouteWithChildren
@@ -1359,7 +1250,6 @@ export interface FileRoutesByTo {
   '/dashboard/workforce': typeof DashboardWorkforceRoute
   '/recruitment/status': typeof RecruitmentStatusRoute
   '/dashboard': typeof DashboardIndexRoute
-  '/dashboard/activities/assign': typeof DashboardActivitiesAssignRoute
   '/dashboard/activities/create': typeof DashboardActivitiesCreateRoute
   '/dashboard/activities/monitor': typeof DashboardActivitiesMonitorRoute
   '/dashboard/admin/attendance-builder': typeof DashboardAdminAttendanceBuilderRoute
@@ -1376,7 +1266,6 @@ export interface FileRoutesByTo {
   '/dashboard/admin/security': typeof DashboardAdminSecurityRoute
   '/dashboard/agencies/$action': typeof DashboardAgenciesActionRoute
   '/dashboard/ai/assistant': typeof DashboardAiAssistantRoute
-  '/dashboard/ai/outputs': typeof DashboardAiOutputsRoute
   '/dashboard/attendance/upload': typeof DashboardAttendanceUploadRoute
   '/dashboard/audit/compliance': typeof DashboardAuditComplianceRoute
   '/dashboard/audit/procurement': typeof DashboardAuditProcurementRoute
@@ -1384,16 +1273,10 @@ export interface FileRoutesByTo {
   '/dashboard/audit/risk-flags': typeof DashboardAuditRiskFlagsRoute
   '/dashboard/budget/allocation': typeof DashboardBudgetAllocationRoute
   '/dashboard/budget/annual': typeof DashboardBudgetAnnualRoute
-  '/dashboard/budget/categories': typeof DashboardBudgetCategoriesRoute
-  '/dashboard/budget/director-review': typeof DashboardBudgetDirectorReviewRoute
   '/dashboard/budget/distribution': typeof DashboardBudgetDistributionRoute
+  '/dashboard/budget/mda-lines': typeof DashboardBudgetMdaLinesRoute
   '/dashboard/budget/parameters': typeof DashboardBudgetParametersRoute
-  '/dashboard/budget/proposal': typeof DashboardBudgetProposalRoute
   '/dashboard/budget/reports': typeof DashboardBudgetReportsRoute
-  '/dashboard/budget/revised': typeof DashboardBudgetRevisedRoute
-  '/dashboard/budget/supplementary': typeof DashboardBudgetSupplementaryRoute
-  '/dashboard/budget/templates': typeof DashboardBudgetTemplatesRoute
-  '/dashboard/budget/upload': typeof DashboardBudgetUploadRoute
   '/dashboard/command-center/budget': typeof DashboardCommandCenterBudgetRoute
   '/dashboard/command-center/communication': typeof DashboardCommandCenterCommunicationRoute
   '/dashboard/command-center/development-plan': typeof DashboardCommandCenterDevelopmentPlanRoute
@@ -1405,8 +1288,6 @@ export interface FileRoutesByTo {
   '/dashboard/communication/groups': typeof DashboardCommunicationGroupsRoute
   '/dashboard/departments/$action': typeof DashboardDepartmentsActionRoute
   '/dashboard/desk-officers/assign': typeof DashboardDeskOfficersAssignRoute
-  '/dashboard/desk-officers/certification': typeof DashboardDeskOfficersCertificationRoute
-  '/dashboard/desk-officers/redeployment': typeof DashboardDeskOfficersRedeploymentRoute
   '/dashboard/desk-officers/replacement': typeof DashboardDeskOfficersReplacementRoute
   '/dashboard/desk-officers/training': typeof DashboardDeskOfficersTrainingRoute
   '/dashboard/dev-plan/kpi-framework': typeof DashboardDevPlanKpiFrameworkRoute
@@ -1414,11 +1295,9 @@ export interface FileRoutesByTo {
   '/dashboard/dev-plan/pillars': typeof DashboardDevPlanPillarsRoute
   '/dashboard/dev-plan/spi-formula': typeof DashboardDevPlanSpiFormulaRoute
   '/dashboard/executive-offices/$action': typeof DashboardExecutiveOfficesActionRoute
-  '/dashboard/executive-room/budgets': typeof DashboardExecutiveRoomBudgetsRoute
   '/dashboard/executive-room/commissioners': typeof DashboardExecutiveRoomCommissionersRoute
   '/dashboard/executive-room/ministries': typeof DashboardExecutiveRoomMinistriesRoute
   '/dashboard/executive-room/projects': typeof DashboardExecutiveRoomProjectsRoute
-  '/dashboard/executive-room/risks': typeof DashboardExecutiveRoomRisksRoute
   '/dashboard/executive-room/spi': typeof DashboardExecutiveRoomSpiRoute
   '/dashboard/gdu-center/requests': typeof DashboardGduCenterRequestsRoute
   '/dashboard/memo/$action': typeof DashboardMemoActionRoute
@@ -1454,7 +1333,6 @@ export interface FileRoutesByTo {
   '/dashboard/staff/upload': typeof DashboardStaffUploadRoute
   '/dashboard/staff/verification': typeof DashboardStaffVerificationRoute
   '/dashboard/staff/view': typeof DashboardStaffViewRoute
-  '/dashboard/structure/$officeId': typeof DashboardStructureOfficeIdRoute
   '/dashboard/tasks/$activityId': typeof DashboardTasksActivityIdRoute
   '/dashboard/tasks/approval': typeof DashboardTasksApprovalRoute
   '/dashboard/tasks/assignment': typeof DashboardTasksAssignmentRoute
@@ -1519,7 +1397,6 @@ export interface FileRoutesById {
   '/dashboard/executive-offices': typeof DashboardExecutiveOfficesRouteWithChildren
   '/dashboard/executive-room': typeof DashboardExecutiveRoomRouteWithChildren
   '/dashboard/financial': typeof DashboardFinancialRoute
-  '/dashboard/governance': typeof DashboardGovernanceRoute
   '/dashboard/intelligence': typeof DashboardIntelligenceRoute
   '/dashboard/map': typeof DashboardMapRoute
   '/dashboard/ministries': typeof DashboardMinistriesRouteWithChildren
@@ -1536,7 +1413,6 @@ export interface FileRoutesById {
   '/dashboard/workforce': typeof DashboardWorkforceRoute
   '/recruitment/status': typeof RecruitmentStatusRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/activities/assign': typeof DashboardActivitiesAssignRoute
   '/dashboard/activities/create': typeof DashboardActivitiesCreateRoute
   '/dashboard/activities/monitor': typeof DashboardActivitiesMonitorRoute
   '/dashboard/admin/attendance-builder': typeof DashboardAdminAttendanceBuilderRoute
@@ -1553,7 +1429,6 @@ export interface FileRoutesById {
   '/dashboard/admin/security': typeof DashboardAdminSecurityRoute
   '/dashboard/agencies/$action': typeof DashboardAgenciesActionRoute
   '/dashboard/ai/assistant': typeof DashboardAiAssistantRoute
-  '/dashboard/ai/outputs': typeof DashboardAiOutputsRoute
   '/dashboard/attendance/upload': typeof DashboardAttendanceUploadRoute
   '/dashboard/audit/compliance': typeof DashboardAuditComplianceRoute
   '/dashboard/audit/procurement': typeof DashboardAuditProcurementRoute
@@ -1561,16 +1436,10 @@ export interface FileRoutesById {
   '/dashboard/audit/risk-flags': typeof DashboardAuditRiskFlagsRoute
   '/dashboard/budget/allocation': typeof DashboardBudgetAllocationRoute
   '/dashboard/budget/annual': typeof DashboardBudgetAnnualRoute
-  '/dashboard/budget/categories': typeof DashboardBudgetCategoriesRoute
-  '/dashboard/budget/director-review': typeof DashboardBudgetDirectorReviewRoute
   '/dashboard/budget/distribution': typeof DashboardBudgetDistributionRoute
+  '/dashboard/budget/mda-lines': typeof DashboardBudgetMdaLinesRoute
   '/dashboard/budget/parameters': typeof DashboardBudgetParametersRoute
-  '/dashboard/budget/proposal': typeof DashboardBudgetProposalRoute
   '/dashboard/budget/reports': typeof DashboardBudgetReportsRoute
-  '/dashboard/budget/revised': typeof DashboardBudgetRevisedRoute
-  '/dashboard/budget/supplementary': typeof DashboardBudgetSupplementaryRoute
-  '/dashboard/budget/templates': typeof DashboardBudgetTemplatesRoute
-  '/dashboard/budget/upload': typeof DashboardBudgetUploadRoute
   '/dashboard/command-center/budget': typeof DashboardCommandCenterBudgetRoute
   '/dashboard/command-center/communication': typeof DashboardCommandCenterCommunicationRoute
   '/dashboard/command-center/development-plan': typeof DashboardCommandCenterDevelopmentPlanRoute
@@ -1582,8 +1451,6 @@ export interface FileRoutesById {
   '/dashboard/communication/groups': typeof DashboardCommunicationGroupsRoute
   '/dashboard/departments/$action': typeof DashboardDepartmentsActionRoute
   '/dashboard/desk-officers/assign': typeof DashboardDeskOfficersAssignRoute
-  '/dashboard/desk-officers/certification': typeof DashboardDeskOfficersCertificationRoute
-  '/dashboard/desk-officers/redeployment': typeof DashboardDeskOfficersRedeploymentRoute
   '/dashboard/desk-officers/replacement': typeof DashboardDeskOfficersReplacementRoute
   '/dashboard/desk-officers/training': typeof DashboardDeskOfficersTrainingRoute
   '/dashboard/dev-plan/kpi-framework': typeof DashboardDevPlanKpiFrameworkRoute
@@ -1591,11 +1458,9 @@ export interface FileRoutesById {
   '/dashboard/dev-plan/pillars': typeof DashboardDevPlanPillarsRoute
   '/dashboard/dev-plan/spi-formula': typeof DashboardDevPlanSpiFormulaRoute
   '/dashboard/executive-offices/$action': typeof DashboardExecutiveOfficesActionRoute
-  '/dashboard/executive-room/budgets': typeof DashboardExecutiveRoomBudgetsRoute
   '/dashboard/executive-room/commissioners': typeof DashboardExecutiveRoomCommissionersRoute
   '/dashboard/executive-room/ministries': typeof DashboardExecutiveRoomMinistriesRoute
   '/dashboard/executive-room/projects': typeof DashboardExecutiveRoomProjectsRoute
-  '/dashboard/executive-room/risks': typeof DashboardExecutiveRoomRisksRoute
   '/dashboard/executive-room/spi': typeof DashboardExecutiveRoomSpiRoute
   '/dashboard/gdu-center/requests': typeof DashboardGduCenterRequestsRoute
   '/dashboard/memo/$action': typeof DashboardMemoActionRoute
@@ -1631,7 +1496,6 @@ export interface FileRoutesById {
   '/dashboard/staff/upload': typeof DashboardStaffUploadRoute
   '/dashboard/staff/verification': typeof DashboardStaffVerificationRoute
   '/dashboard/staff/view': typeof DashboardStaffViewRoute
-  '/dashboard/structure/$officeId': typeof DashboardStructureOfficeIdRoute
   '/dashboard/tasks/$activityId': typeof DashboardTasksActivityIdRoute
   '/dashboard/tasks/approval': typeof DashboardTasksApprovalRoute
   '/dashboard/tasks/assignment': typeof DashboardTasksAssignmentRoute
@@ -1697,7 +1561,6 @@ export interface FileRouteTypes {
     | '/dashboard/executive-offices'
     | '/dashboard/executive-room'
     | '/dashboard/financial'
-    | '/dashboard/governance'
     | '/dashboard/intelligence'
     | '/dashboard/map'
     | '/dashboard/ministries'
@@ -1714,7 +1577,6 @@ export interface FileRouteTypes {
     | '/dashboard/workforce'
     | '/recruitment/status'
     | '/dashboard/'
-    | '/dashboard/activities/assign'
     | '/dashboard/activities/create'
     | '/dashboard/activities/monitor'
     | '/dashboard/admin/attendance-builder'
@@ -1731,7 +1593,6 @@ export interface FileRouteTypes {
     | '/dashboard/admin/security'
     | '/dashboard/agencies/$action'
     | '/dashboard/ai/assistant'
-    | '/dashboard/ai/outputs'
     | '/dashboard/attendance/upload'
     | '/dashboard/audit/compliance'
     | '/dashboard/audit/procurement'
@@ -1739,16 +1600,10 @@ export interface FileRouteTypes {
     | '/dashboard/audit/risk-flags'
     | '/dashboard/budget/allocation'
     | '/dashboard/budget/annual'
-    | '/dashboard/budget/categories'
-    | '/dashboard/budget/director-review'
     | '/dashboard/budget/distribution'
+    | '/dashboard/budget/mda-lines'
     | '/dashboard/budget/parameters'
-    | '/dashboard/budget/proposal'
     | '/dashboard/budget/reports'
-    | '/dashboard/budget/revised'
-    | '/dashboard/budget/supplementary'
-    | '/dashboard/budget/templates'
-    | '/dashboard/budget/upload'
     | '/dashboard/command-center/budget'
     | '/dashboard/command-center/communication'
     | '/dashboard/command-center/development-plan'
@@ -1760,8 +1615,6 @@ export interface FileRouteTypes {
     | '/dashboard/communication/groups'
     | '/dashboard/departments/$action'
     | '/dashboard/desk-officers/assign'
-    | '/dashboard/desk-officers/certification'
-    | '/dashboard/desk-officers/redeployment'
     | '/dashboard/desk-officers/replacement'
     | '/dashboard/desk-officers/training'
     | '/dashboard/dev-plan/kpi-framework'
@@ -1769,11 +1622,9 @@ export interface FileRouteTypes {
     | '/dashboard/dev-plan/pillars'
     | '/dashboard/dev-plan/spi-formula'
     | '/dashboard/executive-offices/$action'
-    | '/dashboard/executive-room/budgets'
     | '/dashboard/executive-room/commissioners'
     | '/dashboard/executive-room/ministries'
     | '/dashboard/executive-room/projects'
-    | '/dashboard/executive-room/risks'
     | '/dashboard/executive-room/spi'
     | '/dashboard/gdu-center/requests'
     | '/dashboard/memo/$action'
@@ -1809,7 +1660,6 @@ export interface FileRouteTypes {
     | '/dashboard/staff/upload'
     | '/dashboard/staff/verification'
     | '/dashboard/staff/view'
-    | '/dashboard/structure/$officeId'
     | '/dashboard/tasks/$activityId'
     | '/dashboard/tasks/approval'
     | '/dashboard/tasks/assignment'
@@ -1871,7 +1721,6 @@ export interface FileRouteTypes {
     | '/dashboard/executive-offices'
     | '/dashboard/executive-room'
     | '/dashboard/financial'
-    | '/dashboard/governance'
     | '/dashboard/intelligence'
     | '/dashboard/map'
     | '/dashboard/ministries'
@@ -1888,7 +1737,6 @@ export interface FileRouteTypes {
     | '/dashboard/workforce'
     | '/recruitment/status'
     | '/dashboard'
-    | '/dashboard/activities/assign'
     | '/dashboard/activities/create'
     | '/dashboard/activities/monitor'
     | '/dashboard/admin/attendance-builder'
@@ -1905,7 +1753,6 @@ export interface FileRouteTypes {
     | '/dashboard/admin/security'
     | '/dashboard/agencies/$action'
     | '/dashboard/ai/assistant'
-    | '/dashboard/ai/outputs'
     | '/dashboard/attendance/upload'
     | '/dashboard/audit/compliance'
     | '/dashboard/audit/procurement'
@@ -1913,16 +1760,10 @@ export interface FileRouteTypes {
     | '/dashboard/audit/risk-flags'
     | '/dashboard/budget/allocation'
     | '/dashboard/budget/annual'
-    | '/dashboard/budget/categories'
-    | '/dashboard/budget/director-review'
     | '/dashboard/budget/distribution'
+    | '/dashboard/budget/mda-lines'
     | '/dashboard/budget/parameters'
-    | '/dashboard/budget/proposal'
     | '/dashboard/budget/reports'
-    | '/dashboard/budget/revised'
-    | '/dashboard/budget/supplementary'
-    | '/dashboard/budget/templates'
-    | '/dashboard/budget/upload'
     | '/dashboard/command-center/budget'
     | '/dashboard/command-center/communication'
     | '/dashboard/command-center/development-plan'
@@ -1934,8 +1775,6 @@ export interface FileRouteTypes {
     | '/dashboard/communication/groups'
     | '/dashboard/departments/$action'
     | '/dashboard/desk-officers/assign'
-    | '/dashboard/desk-officers/certification'
-    | '/dashboard/desk-officers/redeployment'
     | '/dashboard/desk-officers/replacement'
     | '/dashboard/desk-officers/training'
     | '/dashboard/dev-plan/kpi-framework'
@@ -1943,11 +1782,9 @@ export interface FileRouteTypes {
     | '/dashboard/dev-plan/pillars'
     | '/dashboard/dev-plan/spi-formula'
     | '/dashboard/executive-offices/$action'
-    | '/dashboard/executive-room/budgets'
     | '/dashboard/executive-room/commissioners'
     | '/dashboard/executive-room/ministries'
     | '/dashboard/executive-room/projects'
-    | '/dashboard/executive-room/risks'
     | '/dashboard/executive-room/spi'
     | '/dashboard/gdu-center/requests'
     | '/dashboard/memo/$action'
@@ -1983,7 +1820,6 @@ export interface FileRouteTypes {
     | '/dashboard/staff/upload'
     | '/dashboard/staff/verification'
     | '/dashboard/staff/view'
-    | '/dashboard/structure/$officeId'
     | '/dashboard/tasks/$activityId'
     | '/dashboard/tasks/approval'
     | '/dashboard/tasks/assignment'
@@ -2047,7 +1883,6 @@ export interface FileRouteTypes {
     | '/dashboard/executive-offices'
     | '/dashboard/executive-room'
     | '/dashboard/financial'
-    | '/dashboard/governance'
     | '/dashboard/intelligence'
     | '/dashboard/map'
     | '/dashboard/ministries'
@@ -2064,7 +1899,6 @@ export interface FileRouteTypes {
     | '/dashboard/workforce'
     | '/recruitment/status'
     | '/dashboard/'
-    | '/dashboard/activities/assign'
     | '/dashboard/activities/create'
     | '/dashboard/activities/monitor'
     | '/dashboard/admin/attendance-builder'
@@ -2081,7 +1915,6 @@ export interface FileRouteTypes {
     | '/dashboard/admin/security'
     | '/dashboard/agencies/$action'
     | '/dashboard/ai/assistant'
-    | '/dashboard/ai/outputs'
     | '/dashboard/attendance/upload'
     | '/dashboard/audit/compliance'
     | '/dashboard/audit/procurement'
@@ -2089,16 +1922,10 @@ export interface FileRouteTypes {
     | '/dashboard/audit/risk-flags'
     | '/dashboard/budget/allocation'
     | '/dashboard/budget/annual'
-    | '/dashboard/budget/categories'
-    | '/dashboard/budget/director-review'
     | '/dashboard/budget/distribution'
+    | '/dashboard/budget/mda-lines'
     | '/dashboard/budget/parameters'
-    | '/dashboard/budget/proposal'
     | '/dashboard/budget/reports'
-    | '/dashboard/budget/revised'
-    | '/dashboard/budget/supplementary'
-    | '/dashboard/budget/templates'
-    | '/dashboard/budget/upload'
     | '/dashboard/command-center/budget'
     | '/dashboard/command-center/communication'
     | '/dashboard/command-center/development-plan'
@@ -2110,8 +1937,6 @@ export interface FileRouteTypes {
     | '/dashboard/communication/groups'
     | '/dashboard/departments/$action'
     | '/dashboard/desk-officers/assign'
-    | '/dashboard/desk-officers/certification'
-    | '/dashboard/desk-officers/redeployment'
     | '/dashboard/desk-officers/replacement'
     | '/dashboard/desk-officers/training'
     | '/dashboard/dev-plan/kpi-framework'
@@ -2119,11 +1944,9 @@ export interface FileRouteTypes {
     | '/dashboard/dev-plan/pillars'
     | '/dashboard/dev-plan/spi-formula'
     | '/dashboard/executive-offices/$action'
-    | '/dashboard/executive-room/budgets'
     | '/dashboard/executive-room/commissioners'
     | '/dashboard/executive-room/ministries'
     | '/dashboard/executive-room/projects'
-    | '/dashboard/executive-room/risks'
     | '/dashboard/executive-room/spi'
     | '/dashboard/gdu-center/requests'
     | '/dashboard/memo/$action'
@@ -2159,7 +1982,6 @@ export interface FileRouteTypes {
     | '/dashboard/staff/upload'
     | '/dashboard/staff/verification'
     | '/dashboard/staff/view'
-    | '/dashboard/structure/$officeId'
     | '/dashboard/tasks/$activityId'
     | '/dashboard/tasks/approval'
     | '/dashboard/tasks/assignment'
@@ -2379,13 +2201,6 @@ declare module '@tanstack/react-router' {
       path: '/intelligence'
       fullPath: '/dashboard/intelligence'
       preLoaderRoute: typeof DashboardIntelligenceRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/governance': {
-      id: '/dashboard/governance'
-      path: '/governance'
-      fullPath: '/dashboard/governance'
-      preLoaderRoute: typeof DashboardGovernanceRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/financial': {
@@ -2682,13 +2497,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTasksActivityIdRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/structure/$officeId': {
-      id: '/dashboard/structure/$officeId'
-      path: '/structure/$officeId'
-      fullPath: '/dashboard/structure/$officeId'
-      preLoaderRoute: typeof DashboardStructureOfficeIdRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/dashboard/staff/view': {
       id: '/dashboard/staff/view'
       path: '/view'
@@ -2934,13 +2742,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardExecutiveRoomSpiRouteImport
       parentRoute: typeof DashboardExecutiveRoomRoute
     }
-    '/dashboard/executive-room/risks': {
-      id: '/dashboard/executive-room/risks'
-      path: '/risks'
-      fullPath: '/dashboard/executive-room/risks'
-      preLoaderRoute: typeof DashboardExecutiveRoomRisksRouteImport
-      parentRoute: typeof DashboardExecutiveRoomRoute
-    }
     '/dashboard/executive-room/projects': {
       id: '/dashboard/executive-room/projects'
       path: '/projects'
@@ -2960,13 +2761,6 @@ declare module '@tanstack/react-router' {
       path: '/commissioners'
       fullPath: '/dashboard/executive-room/commissioners'
       preLoaderRoute: typeof DashboardExecutiveRoomCommissionersRouteImport
-      parentRoute: typeof DashboardExecutiveRoomRoute
-    }
-    '/dashboard/executive-room/budgets': {
-      id: '/dashboard/executive-room/budgets'
-      path: '/budgets'
-      fullPath: '/dashboard/executive-room/budgets'
-      preLoaderRoute: typeof DashboardExecutiveRoomBudgetsRouteImport
       parentRoute: typeof DashboardExecutiveRoomRoute
     }
     '/dashboard/executive-offices/$action': {
@@ -3016,20 +2810,6 @@ declare module '@tanstack/react-router' {
       path: '/replacement'
       fullPath: '/dashboard/desk-officers/replacement'
       preLoaderRoute: typeof DashboardDeskOfficersReplacementRouteImport
-      parentRoute: typeof DashboardDeskOfficersRoute
-    }
-    '/dashboard/desk-officers/redeployment': {
-      id: '/dashboard/desk-officers/redeployment'
-      path: '/redeployment'
-      fullPath: '/dashboard/desk-officers/redeployment'
-      preLoaderRoute: typeof DashboardDeskOfficersRedeploymentRouteImport
-      parentRoute: typeof DashboardDeskOfficersRoute
-    }
-    '/dashboard/desk-officers/certification': {
-      id: '/dashboard/desk-officers/certification'
-      path: '/certification'
-      fullPath: '/dashboard/desk-officers/certification'
-      preLoaderRoute: typeof DashboardDeskOfficersCertificationRouteImport
       parentRoute: typeof DashboardDeskOfficersRoute
     }
     '/dashboard/desk-officers/assign': {
@@ -3109,46 +2889,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCommandCenterBudgetRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/budget/upload': {
-      id: '/dashboard/budget/upload'
-      path: '/upload'
-      fullPath: '/dashboard/budget/upload'
-      preLoaderRoute: typeof DashboardBudgetUploadRouteImport
-      parentRoute: typeof DashboardBudgetRoute
-    }
-    '/dashboard/budget/templates': {
-      id: '/dashboard/budget/templates'
-      path: '/templates'
-      fullPath: '/dashboard/budget/templates'
-      preLoaderRoute: typeof DashboardBudgetTemplatesRouteImport
-      parentRoute: typeof DashboardBudgetRoute
-    }
-    '/dashboard/budget/supplementary': {
-      id: '/dashboard/budget/supplementary'
-      path: '/supplementary'
-      fullPath: '/dashboard/budget/supplementary'
-      preLoaderRoute: typeof DashboardBudgetSupplementaryRouteImport
-      parentRoute: typeof DashboardBudgetRoute
-    }
-    '/dashboard/budget/revised': {
-      id: '/dashboard/budget/revised'
-      path: '/revised'
-      fullPath: '/dashboard/budget/revised'
-      preLoaderRoute: typeof DashboardBudgetRevisedRouteImport
-      parentRoute: typeof DashboardBudgetRoute
-    }
     '/dashboard/budget/reports': {
       id: '/dashboard/budget/reports'
       path: '/reports'
       fullPath: '/dashboard/budget/reports'
       preLoaderRoute: typeof DashboardBudgetReportsRouteImport
-      parentRoute: typeof DashboardBudgetRoute
-    }
-    '/dashboard/budget/proposal': {
-      id: '/dashboard/budget/proposal'
-      path: '/proposal'
-      fullPath: '/dashboard/budget/proposal'
-      preLoaderRoute: typeof DashboardBudgetProposalRouteImport
       parentRoute: typeof DashboardBudgetRoute
     }
     '/dashboard/budget/parameters': {
@@ -3158,25 +2903,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBudgetParametersRouteImport
       parentRoute: typeof DashboardBudgetRoute
     }
+    '/dashboard/budget/mda-lines': {
+      id: '/dashboard/budget/mda-lines'
+      path: '/mda-lines'
+      fullPath: '/dashboard/budget/mda-lines'
+      preLoaderRoute: typeof DashboardBudgetMdaLinesRouteImport
+      parentRoute: typeof DashboardBudgetRoute
+    }
     '/dashboard/budget/distribution': {
       id: '/dashboard/budget/distribution'
       path: '/distribution'
       fullPath: '/dashboard/budget/distribution'
       preLoaderRoute: typeof DashboardBudgetDistributionRouteImport
-      parentRoute: typeof DashboardBudgetRoute
-    }
-    '/dashboard/budget/director-review': {
-      id: '/dashboard/budget/director-review'
-      path: '/director-review'
-      fullPath: '/dashboard/budget/director-review'
-      preLoaderRoute: typeof DashboardBudgetDirectorReviewRouteImport
-      parentRoute: typeof DashboardBudgetRoute
-    }
-    '/dashboard/budget/categories': {
-      id: '/dashboard/budget/categories'
-      path: '/categories'
-      fullPath: '/dashboard/budget/categories'
-      preLoaderRoute: typeof DashboardBudgetCategoriesRouteImport
       parentRoute: typeof DashboardBudgetRoute
     }
     '/dashboard/budget/annual': {
@@ -3226,13 +2964,6 @@ declare module '@tanstack/react-router' {
       path: '/attendance/upload'
       fullPath: '/dashboard/attendance/upload'
       preLoaderRoute: typeof DashboardAttendanceUploadRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/ai/outputs': {
-      id: '/dashboard/ai/outputs'
-      path: '/ai/outputs'
-      fullPath: '/dashboard/ai/outputs'
-      preLoaderRoute: typeof DashboardAiOutputsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/ai/assistant': {
@@ -3347,13 +3078,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardActivitiesCreateRouteImport
       parentRoute: typeof DashboardActivitiesRoute
     }
-    '/dashboard/activities/assign': {
-      id: '/dashboard/activities/assign'
-      path: '/assign'
-      fullPath: '/dashboard/activities/assign'
-      preLoaderRoute: typeof DashboardActivitiesAssignRouteImport
-      parentRoute: typeof DashboardActivitiesRoute
-    }
     '/dashboard/budget/intel/rankings': {
       id: '/dashboard/budget/intel/rankings'
       path: '/intel/rankings'
@@ -3435,13 +3159,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardActivitiesRouteChildren {
-  DashboardActivitiesAssignRoute: typeof DashboardActivitiesAssignRoute
   DashboardActivitiesCreateRoute: typeof DashboardActivitiesCreateRoute
   DashboardActivitiesMonitorRoute: typeof DashboardActivitiesMonitorRoute
 }
 
 const DashboardActivitiesRouteChildren: DashboardActivitiesRouteChildren = {
-  DashboardActivitiesAssignRoute: DashboardActivitiesAssignRoute,
   DashboardActivitiesCreateRoute: DashboardActivitiesCreateRoute,
   DashboardActivitiesMonitorRoute: DashboardActivitiesMonitorRoute,
 }
@@ -3463,16 +3185,10 @@ const DashboardAgenciesRouteWithChildren =
 interface DashboardBudgetRouteChildren {
   DashboardBudgetAllocationRoute: typeof DashboardBudgetAllocationRoute
   DashboardBudgetAnnualRoute: typeof DashboardBudgetAnnualRoute
-  DashboardBudgetCategoriesRoute: typeof DashboardBudgetCategoriesRoute
-  DashboardBudgetDirectorReviewRoute: typeof DashboardBudgetDirectorReviewRoute
   DashboardBudgetDistributionRoute: typeof DashboardBudgetDistributionRoute
+  DashboardBudgetMdaLinesRoute: typeof DashboardBudgetMdaLinesRoute
   DashboardBudgetParametersRoute: typeof DashboardBudgetParametersRoute
-  DashboardBudgetProposalRoute: typeof DashboardBudgetProposalRoute
   DashboardBudgetReportsRoute: typeof DashboardBudgetReportsRoute
-  DashboardBudgetRevisedRoute: typeof DashboardBudgetRevisedRoute
-  DashboardBudgetSupplementaryRoute: typeof DashboardBudgetSupplementaryRoute
-  DashboardBudgetTemplatesRoute: typeof DashboardBudgetTemplatesRoute
-  DashboardBudgetUploadRoute: typeof DashboardBudgetUploadRoute
   DashboardBudgetIndexRoute: typeof DashboardBudgetIndexRoute
   DashboardBudgetIntelAiRoute: typeof DashboardBudgetIntelAiRoute
   DashboardBudgetIntelAnalyticsRoute: typeof DashboardBudgetIntelAnalyticsRoute
@@ -3484,16 +3200,10 @@ interface DashboardBudgetRouteChildren {
 const DashboardBudgetRouteChildren: DashboardBudgetRouteChildren = {
   DashboardBudgetAllocationRoute: DashboardBudgetAllocationRoute,
   DashboardBudgetAnnualRoute: DashboardBudgetAnnualRoute,
-  DashboardBudgetCategoriesRoute: DashboardBudgetCategoriesRoute,
-  DashboardBudgetDirectorReviewRoute: DashboardBudgetDirectorReviewRoute,
   DashboardBudgetDistributionRoute: DashboardBudgetDistributionRoute,
+  DashboardBudgetMdaLinesRoute: DashboardBudgetMdaLinesRoute,
   DashboardBudgetParametersRoute: DashboardBudgetParametersRoute,
-  DashboardBudgetProposalRoute: DashboardBudgetProposalRoute,
   DashboardBudgetReportsRoute: DashboardBudgetReportsRoute,
-  DashboardBudgetRevisedRoute: DashboardBudgetRevisedRoute,
-  DashboardBudgetSupplementaryRoute: DashboardBudgetSupplementaryRoute,
-  DashboardBudgetTemplatesRoute: DashboardBudgetTemplatesRoute,
-  DashboardBudgetUploadRoute: DashboardBudgetUploadRoute,
   DashboardBudgetIndexRoute: DashboardBudgetIndexRoute,
   DashboardBudgetIntelAiRoute: DashboardBudgetIntelAiRoute,
   DashboardBudgetIntelAnalyticsRoute: DashboardBudgetIntelAnalyticsRoute,
@@ -3508,18 +3218,12 @@ const DashboardBudgetRouteWithChildren = DashboardBudgetRoute._addFileChildren(
 
 interface DashboardDeskOfficersRouteChildren {
   DashboardDeskOfficersAssignRoute: typeof DashboardDeskOfficersAssignRoute
-  DashboardDeskOfficersCertificationRoute: typeof DashboardDeskOfficersCertificationRoute
-  DashboardDeskOfficersRedeploymentRoute: typeof DashboardDeskOfficersRedeploymentRoute
   DashboardDeskOfficersReplacementRoute: typeof DashboardDeskOfficersReplacementRoute
   DashboardDeskOfficersTrainingRoute: typeof DashboardDeskOfficersTrainingRoute
 }
 
 const DashboardDeskOfficersRouteChildren: DashboardDeskOfficersRouteChildren = {
   DashboardDeskOfficersAssignRoute: DashboardDeskOfficersAssignRoute,
-  DashboardDeskOfficersCertificationRoute:
-    DashboardDeskOfficersCertificationRoute,
-  DashboardDeskOfficersRedeploymentRoute:
-    DashboardDeskOfficersRedeploymentRoute,
   DashboardDeskOfficersReplacementRoute: DashboardDeskOfficersReplacementRoute,
   DashboardDeskOfficersTrainingRoute: DashboardDeskOfficersTrainingRoute,
 }
@@ -3544,23 +3248,19 @@ const DashboardExecutiveOfficesRouteWithChildren =
   )
 
 interface DashboardExecutiveRoomRouteChildren {
-  DashboardExecutiveRoomBudgetsRoute: typeof DashboardExecutiveRoomBudgetsRoute
   DashboardExecutiveRoomCommissionersRoute: typeof DashboardExecutiveRoomCommissionersRoute
   DashboardExecutiveRoomMinistriesRoute: typeof DashboardExecutiveRoomMinistriesRoute
   DashboardExecutiveRoomProjectsRoute: typeof DashboardExecutiveRoomProjectsRoute
-  DashboardExecutiveRoomRisksRoute: typeof DashboardExecutiveRoomRisksRoute
   DashboardExecutiveRoomSpiRoute: typeof DashboardExecutiveRoomSpiRoute
 }
 
 const DashboardExecutiveRoomRouteChildren: DashboardExecutiveRoomRouteChildren =
   {
-    DashboardExecutiveRoomBudgetsRoute: DashboardExecutiveRoomBudgetsRoute,
     DashboardExecutiveRoomCommissionersRoute:
       DashboardExecutiveRoomCommissionersRoute,
     DashboardExecutiveRoomMinistriesRoute:
       DashboardExecutiveRoomMinistriesRoute,
     DashboardExecutiveRoomProjectsRoute: DashboardExecutiveRoomProjectsRoute,
-    DashboardExecutiveRoomRisksRoute: DashboardExecutiveRoomRisksRoute,
     DashboardExecutiveRoomSpiRoute: DashboardExecutiveRoomSpiRoute,
   }
 
@@ -3645,7 +3345,6 @@ interface DashboardRouteChildren {
   DashboardExecutiveOfficesRoute: typeof DashboardExecutiveOfficesRouteWithChildren
   DashboardExecutiveRoomRoute: typeof DashboardExecutiveRoomRouteWithChildren
   DashboardFinancialRoute: typeof DashboardFinancialRoute
-  DashboardGovernanceRoute: typeof DashboardGovernanceRoute
   DashboardIntelligenceRoute: typeof DashboardIntelligenceRoute
   DashboardMapRoute: typeof DashboardMapRoute
   DashboardMinistriesRoute: typeof DashboardMinistriesRouteWithChildren
@@ -3674,7 +3373,6 @@ interface DashboardRouteChildren {
   DashboardAdminRecoveryRoute: typeof DashboardAdminRecoveryRoute
   DashboardAdminSecurityRoute: typeof DashboardAdminSecurityRoute
   DashboardAiAssistantRoute: typeof DashboardAiAssistantRoute
-  DashboardAiOutputsRoute: typeof DashboardAiOutputsRoute
   DashboardAttendanceUploadRoute: typeof DashboardAttendanceUploadRoute
   DashboardAuditComplianceRoute: typeof DashboardAuditComplianceRoute
   DashboardAuditProcurementRoute: typeof DashboardAuditProcurementRoute
@@ -3713,7 +3411,6 @@ interface DashboardRouteChildren {
   DashboardReportsMonthlyRoute: typeof DashboardReportsMonthlyRoute
   DashboardReportsQuarterlyRoute: typeof DashboardReportsQuarterlyRoute
   DashboardReportsWeeklyRoute: typeof DashboardReportsWeeklyRoute
-  DashboardStructureOfficeIdRoute: typeof DashboardStructureOfficeIdRoute
   DashboardTasksActivityIdRoute: typeof DashboardTasksActivityIdRoute
   DashboardTasksApprovalRoute: typeof DashboardTasksApprovalRoute
   DashboardTasksAssignmentRoute: typeof DashboardTasksAssignmentRoute
@@ -3763,7 +3460,6 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardExecutiveOfficesRoute: DashboardExecutiveOfficesRouteWithChildren,
   DashboardExecutiveRoomRoute: DashboardExecutiveRoomRouteWithChildren,
   DashboardFinancialRoute: DashboardFinancialRoute,
-  DashboardGovernanceRoute: DashboardGovernanceRoute,
   DashboardIntelligenceRoute: DashboardIntelligenceRoute,
   DashboardMapRoute: DashboardMapRoute,
   DashboardMinistriesRoute: DashboardMinistriesRouteWithChildren,
@@ -3792,7 +3488,6 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAdminRecoveryRoute: DashboardAdminRecoveryRoute,
   DashboardAdminSecurityRoute: DashboardAdminSecurityRoute,
   DashboardAiAssistantRoute: DashboardAiAssistantRoute,
-  DashboardAiOutputsRoute: DashboardAiOutputsRoute,
   DashboardAttendanceUploadRoute: DashboardAttendanceUploadRoute,
   DashboardAuditComplianceRoute: DashboardAuditComplianceRoute,
   DashboardAuditProcurementRoute: DashboardAuditProcurementRoute,
@@ -3835,7 +3530,6 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardReportsMonthlyRoute: DashboardReportsMonthlyRoute,
   DashboardReportsQuarterlyRoute: DashboardReportsQuarterlyRoute,
   DashboardReportsWeeklyRoute: DashboardReportsWeeklyRoute,
-  DashboardStructureOfficeIdRoute: DashboardStructureOfficeIdRoute,
   DashboardTasksActivityIdRoute: DashboardTasksActivityIdRoute,
   DashboardTasksApprovalRoute: DashboardTasksApprovalRoute,
   DashboardTasksAssignmentRoute: DashboardTasksAssignmentRoute,

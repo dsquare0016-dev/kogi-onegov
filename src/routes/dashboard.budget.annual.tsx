@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Landmark, TrendingUp, PieChart, Activity, DollarSign, ArrowDownRight, Briefcase } from 'lucide-react';
@@ -8,6 +9,21 @@ export const Route = createFileRoute('/dashboard/budget/annual')({
 });
 
 function AnnualBudgetPage() {
+  const [activeYear, setActiveYear] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return Number(localStorage.getItem('gdu_operational_year') || '2026');
+    }
+    return 2026;
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setActiveYear(Number(localStorage.getItem('gdu_operational_year') || '2026'));
+    };
+    window.addEventListener('siteConfigUpdate', handleUpdate);
+    return () => window.removeEventListener('siteConfigUpdate', handleUpdate);
+  }, []);
+
   const stats = [
     { label: 'Total Budget (Approved)', value: '₦8.459B', icon: Landmark, tone: "text-foreground" },
     { label: 'Total Revenue', value: '₦8.459B', icon: Activity, tone: "text-blue-500" },
@@ -54,7 +70,7 @@ function AnnualBudgetPage() {
          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-[11px] uppercase tracking-widest text-primary font-bold mb-4 border border-primary/20">
            <DollarSign className="size-3.5" /> Budget Control Center
          </div>
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2">Annual Budget 2026</h1>
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2">Annual Budget {activeYear}</h1>
         <p className="text-muted-foreground text-lg max-w-2xl">Main approved state budget showing macroeconomic structure and distribution parameters.</p>
       </div>
 

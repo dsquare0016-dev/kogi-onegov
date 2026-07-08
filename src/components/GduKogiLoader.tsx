@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export function GduKogiLoader({ size = "md", text }: { size?: "sm" | "md" | "lg"; text?: string }) {
+  const [mainLogo, setMainLogo] = useState("/kogi-logo.png");
+  const [gduLogo, setGduLogo] = useState("/gdu-logo.png");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setMainLogo(localStorage.getItem("gdu_main_logo") || "/kogi-logo.png");
+      setGduLogo(localStorage.getItem("gdu_gdu_logo") || "/gdu-logo.png");
+    }
+  }, []);
+
   // Determine sizes and orbit variables based on the size prop
   let logoSize = "size-14";
   let orbitRadius = "26px";
@@ -31,7 +41,7 @@ export function GduKogiLoader({ size = "md", text }: { size?: "sm" | "md" | "lg"
         {/* Kogi Logo */}
         <div className={`absolute ${logoSize} rounded-full bg-white shadow-lg p-1.5 border border-[#C5A059]/40 flex items-center justify-center animate-flip-1`}>
           <img 
-            src="/kogi-logo.png" 
+            src={mainLogo} 
             alt="Kogi Seal" 
             className="w-full h-full object-contain rounded-full" 
             onError={(e) => {
@@ -43,7 +53,7 @@ export function GduKogiLoader({ size = "md", text }: { size?: "sm" | "md" | "lg"
         {/* GDU Logo */}
         <div className={`absolute ${logoSize} rounded-full bg-white shadow-lg p-1.5 border border-[#C5A059]/40 flex items-center justify-center animate-flip-2`}>
           <img 
-            src="/gdu-logo.png" 
+            src={gduLogo} 
             alt="GDU Logo" 
             className="w-full h-full object-contain rounded-full" 
             onError={(e) => {

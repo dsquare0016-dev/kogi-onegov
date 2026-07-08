@@ -1177,6 +1177,10 @@ function AdminConfigurationComponent() {
                             try {
                               await dbToggleYearLock({ data: { year: activeYear, isLocked: !isYearLocked } });
                               setIsYearLocked(!isYearLocked);
+                              if (typeof window !== 'undefined') {
+                                localStorage.setItem('gdu_operational_year_locked', String(!isYearLocked));
+                                window.dispatchEvent(new Event('siteConfigUpdate'));
+                              }
                               alert(`Year ${activeYear} workflows ${!isYearLocked ? 'Locked' : 'Unlocked'} successfully.`);
                             } catch (e: any) {
                               alert('Failed to update year status: ' + e.message);
@@ -1201,6 +1205,11 @@ function AdminConfigurationComponent() {
                               await dbToggleYearLock({ data: { year: nextYear, isLocked: false } });
                               setActiveYear(nextYear);
                               setIsYearLocked(false);
+                              if (typeof window !== 'undefined') {
+                                localStorage.setItem('gdu_operational_year', String(nextYear));
+                                localStorage.setItem('gdu_operational_year_locked', 'false');
+                                window.dispatchEvent(new Event('siteConfigUpdate'));
+                              }
                               alert(`System successfully migrated to Year ${nextYear}.`);
                             } catch (e: any) {
                               alert('Failed to migrate to next year: ' + e.message);
@@ -1221,6 +1230,11 @@ function AdminConfigurationComponent() {
                               await dbToggleYearLock({ data: { year: prevYear, isLocked: false } });
                               setActiveYear(prevYear);
                               setIsYearLocked(false);
+                              if (typeof window !== 'undefined') {
+                                localStorage.setItem('gdu_operational_year', String(prevYear));
+                                localStorage.setItem('gdu_operational_year_locked', 'false');
+                                window.dispatchEvent(new Event('siteConfigUpdate'));
+                              }
                               alert(`Operational cycle rolled back to Year ${prevYear}.`);
                             } catch (e: any) {
                               alert('Failed to rollback year: ' + e.message);

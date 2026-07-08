@@ -139,16 +139,6 @@ function AgencyActionPage() {
         }
       });
 
-      if (selectedStaffId) {
-        await dbAssignOfficeHolder({
-          data: {
-            orgId: selectedAgency.id,
-            userId: selectedStaffId,
-            roleName: 'head_of_department'
-          }
-        });
-      }
-
       alert("Agency updated successfully!");
       window.location.href = '/dashboard/agencies';
     } catch (err: any) {
@@ -225,28 +215,7 @@ function AgencyActionPage() {
               </select>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold">Contact Phone</label>
-                <input 
-                  type="text" 
-                  value={dgPhone}
-                  onChange={e => setDgPhone(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. +234..." 
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold">Contact Email</label>
-                <input 
-                  type="email" 
-                  value={dgEmail}
-                  onChange={e => setDgEmail(e.target.value)}
-                  className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. info@agency.kg.gov.ng" 
-                />
-              </div>
-            </div>
+
 
             <div className="pt-4 flex justify-end">
                <button 
@@ -315,41 +284,9 @@ function AgencyActionPage() {
             <div className="overflow-y-auto p-6 space-y-6">
               {!isDelete && (
                 <div className="space-y-4">
-                  <h3 className="text-sm font-bold text-primary uppercase tracking-wider">Director General Profile & Budget</h3>
+                  <h3 className="text-sm font-bold text-primary uppercase tracking-wider">Supervising Ministry Settings</h3>
                   <div className="space-y-3">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-muted-foreground uppercase">DG/Exec Secretary (Select Staff)</label>
-                      <SearchableSelect
-                        options={(staffList ?? []).map(s => ({
-                          id: s.userId,
-                          name: s.name,
-                          subtext: `${s.staffId} • ${s.mda}`
-                        }))}
-                        value={selectedStaffId}
-                        onChange={handleStaffChange}
-                        placeholder="Select from registered Staff database"
-                      />
-                    </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-muted-foreground uppercase">Phone Number</label>
-                      <input 
-                        type="text" 
-                        value={editDgPhone}
-                        onChange={e => setEditDgPhone(e.target.value)}
-                        className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-muted-foreground uppercase">Email Address</label>
-                      <input 
-                        type="email" 
-                        value={editDgEmail}
-                        onChange={e => setEditDgEmail(e.target.value)}
-                        className="w-full p-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" 
-                      />
-                    </div>
-                    
-                    <div className="space-y-1 pt-2 border-t border-border/50">
                       <label className="text-xs font-bold text-muted-foreground uppercase">Supervising Ministry</label>
                       <select 
                         value={editMother}
@@ -362,8 +299,6 @@ function AgencyActionPage() {
                         ))}
                       </select>
                     </div>
-
-                    {/* Budget is computed dynamically based on child units/projects and not edited here */}
                   </div>
                 </div>
               )}

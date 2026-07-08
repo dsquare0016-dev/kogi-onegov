@@ -217,6 +217,12 @@ function RootComponent() {
 
     const syncConfig = async () => {
       try {
+        const yearData = await dbGetSystemSetting({ data: { key: 'operational_year' } });
+        if (yearData) {
+          localStorage.setItem('gdu_operational_year', String(yearData.current_year || 2026));
+          localStorage.setItem('gdu_operational_year_locked', String(yearData.is_locked || false));
+        }
+
         const data = await dbGetSystemSetting({ data: { key: 'site_configuration' } });
         if (data) {
           const keys = [
@@ -264,9 +270,14 @@ function RootComponent() {
           }
 
           // Sync alignmentLevel
-          if (data.alignmentLevel) {
+          if (data.alignmentLevel || data.communicationHub !== undefined) {
             const { useSettingsStore } = await import('@/lib/settingsStore');
-            useSettingsStore.getState().setGovernanceAlignmentLevel(data.alignmentLevel);
+            if (data.alignmentLevel) {
+              useSettingsStore.getState().setGovernanceAlignmentLevel(data.alignmentLevel);
+            }
+            if (data.communicationHub !== undefined) {
+              useSettingsStore.getState().setCommunicationHubEnabled(data.communicationHub);
+            }
           }
 
           // Sync bannerStore
