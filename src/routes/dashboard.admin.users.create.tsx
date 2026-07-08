@@ -1,4 +1,4 @@
-import { dbRegisterUser } from '@/lib/postgres-service';
+import { dbRegisterUser, getOrganizationsList } from '@/lib/postgres-service';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { UserPlus, Save, AlertTriangle, X, Eye, EyeOff } from 'lucide-react';
@@ -10,13 +10,22 @@ import { Lock } from 'lucide-react';
 import { safeSetDoc, uploadFile } from '@/lib/firebase';
 
 export const Route = createFileRoute('/dashboard/admin/users/create')({
+  loader: async () => {
+    const mdas = await getOrganizationsList();
+    return { mdas };
+  },
   component: CreateUser,
 });
 
 function CreateUser() {
+  const { mdas } = Route.useLoaderData();
   const navigate = useNavigate();
-  const { staffTypes, generateStaffId, records: nominalRecords } = useNominalRollStore();
+  const { staffTypes, generateStaffId, records: nominalRecords, loadRecords } = useNominalRollStore();
   const [staffType, setStaffType] = useState('Civil Servant');
+
+  useEffect(() => {
+    loadRecords();
+  }, []);
 
   // Form fields
   const [selectedStaffId, setSelectedStaffId] = useState('');
@@ -66,12 +75,12 @@ function CreateUser() {
 
   // When a nominal roll entry is selected, pre‑fill fields
   const handleNominalSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const staffId = e.target.value;
-    setSelectedStaffId(staffId);
-    const entry = nominalRecords.find(r => r.staffId === staffId);
+    const selectedId = e.target.value;
+    setSelectedStaffId(selectedId); // We store the `id` here now
+    const entry = nominalRecords.find(r => (r.id === selectedId) || (r.staffId === selectedId));
     if (entry) {
-      setFullName(entry.fullName);
-      setEmail(entry.email || (entry.fullName.toLowerCase().replace(/\s+/g, '.') + '@kogistate.gov.ng'));
+      setFullName(entry.fullName || '');
+      setEmail(entry.email || (entry.fullName ? entry.fullName.toLowerCase().replace(/\s+/g, '.') + '@kogistate.gov.ng' : ''));
       setStaffType(entry.staffType || 'Civil Servant');
       setDepartment(entry.department || 'General');
       setMda(entry.mda || 'Ministry of Finance');
@@ -306,11 +315,14 @@ function CreateUser() {
                   className="w-full p-2.5 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary font-bold shadow-sm"
                 >
                   <option value="">-- Select Staff Name --</option>
-                  {nominalRecords.map(rec => (
-                    <option key={rec.staffId} value={rec.staffId}>
-                      {rec.fullName} ({rec.staffId}){rec.isRegistered ? ' [Already Registered]' : ''}
-                    </option>
-                  ))}
+                  {nominalRecords.map(rec => {
+                    const uniqueId = (rec as any).id || rec.staffId;
+                    return (
+                      <option key={uniqueId} value={uniqueId}>
+                        {rec.fullName} ({rec.staffId || 'No ID'}){rec.isRegistered ? ' [Already Registered]' : ''}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
@@ -345,21 +357,11 @@ function CreateUser() {
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-muted-foreground uppercase">MDA / Ministry</label>
                     <select value={mda} onChange={e => setMda(e.target.value)} className="w-full p-2.5 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary font-semibold">
-                      <option>Ministry of Finance</option>
-                      <option>Ministry of Health</option>
-                      <option>Ministry of Education</option>
-                      <option>Ministry of Works & Housing</option>
-                      <option>Ministry of Agriculture</option>
-                      <option>Ministry of Justice</option>
-                      <option>Civil Service Commission</option>
-                      <option>Science & Technology</option>
-                      <option>Ministry of Local Government & Chieftaincy Affairs</option>
-                      <option>Ministry of Youth & Sports Development</option>
-                      <option>Ministry of Environment</option>
-                      <option>Ministry of Women Affairs</option>
-                      <option>Ministry of Information & Communications</option>
-                      <option>State Government House (Administration)</option>
-                      <option>GDU Command Center</option>
+                      <option value="">-- Select MDA / Ministry --</option>
+                      {mdas?.map((org: any) => (
+                        <option key={org.id} value={org.name}>{org.name}</option>
+                      ))}
+                      <option value="GDU Command Center">GDU Command Center</option>
                     </select>
                   </div>
 

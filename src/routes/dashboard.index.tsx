@@ -1,4 +1,4 @@
-import { dbGetSystemHealthStatus } from '@/lib/postgres-service';
+import { dbGetSystemHealthStatus, getExecutiveSummary } from '@/lib/postgres-service';
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { getSession, roleById } from "@/lib/auth";
 import type { RoleProfile } from "@/lib/roles";
@@ -144,26 +144,28 @@ function GlobalDashboard({ name, title, profile }: { name: string; title: string
 
     async function loadStats() {
       try {
-        const mdaFilter = session?.mda || session?.department || profile?.ministry || userProfile?.ministry;
-        const [min, ag, lga, spi, proj, budgetUtil, devPlan, staff, pillars, progs, att, trend, rev, budgetTotal] = await Promise.all([
-          getTotalMinistries(mdaFilter),
-          getTotalAgencies(mdaFilter),
-          getTotalLGAs(),
-          getStatePerformanceIndex(mdaFilter),
-          getActiveProjects(mdaFilter),
-          getBudgetUtilization(mdaFilter),
-          getDevelopmentPlanPerformance(mdaFilter),
-          getTotalCivilServants(mdaFilter),
-          getTotalDevPlanPillars(mdaFilter),
-          getTotalProgrammes(mdaFilter),
-          getAttendanceRate(),
-          getBudgetExecutionTrend(),
-          getTotalRevenue(),
-          getTotalBudget(mdaFilter)
-        ]);
+        const orgId = session?.organization_id;
+        const role = profile?.id;
+        
+        const summary = await getExecutiveSummary({ data: { role, organizationId: orgId } });
+        
         setStats({
-          min, ag, lga, spi, proj, budgetUtil, devPlan, staff, pillars, progs, att, rev, budgetTotal
+          min: { value: summary.ministries, status: 'LIVE DATA LINKED' },
+          ag: { value: summary.agencies, status: 'LIVE DATA LINKED' },
+          lga: { value: summary.lgas, status: 'LIVE DATA LINKED' },
+          spi: { value: summary.spi ? `${summary.spi}%` : 'N/A', status: 'LIVE DATA LINKED' },
+          proj: { value: summary.activeProjects, status: 'LIVE DATA LINKED' },
+          budgetUtil: { value: summary.budgetPerformance ? `${summary.budgetPerformance}%` : 'N/A', status: 'LIVE DATA LINKED' },
+          devPlan: { value: summary.developmentPerformance ? `${summary.developmentPerformance}%` : 'N/A', status: 'LIVE DATA LINKED' },
+          staff: { value: summary.staffStrength, status: 'LIVE DATA LINKED' },
+          pillars: { value: summary.pillars, status: 'LIVE DATA LINKED' },
+          progs: { value: summary.activeProgrammes, status: 'LIVE DATA LINKED' },
+          att: { value: null, status: 'N/A' },
+          rev: { value: 'N/A', status: 'N/A' },
+          budgetTotal: { value: 'N/A', status: 'N/A' }
         });
+        
+        const trend = await getBudgetExecutionTrend();
         setTrendRes(trend);
       } catch (err) {
         console.error("Dashboard stats load failed:", err);
@@ -373,8 +375,7 @@ function GlobalDashboard({ name, title, profile }: { name: string; title: string
       { label: "State Budget Size", value: "₦450B", icon: <Wallet className="text-emerald-500" />, onClick: () => navigate({to: "/dashboard/budget"}) },
       { label: "YTD Execution", value: "42%", icon: <TrendingUp className="text-blue-500" />, onClick: () => navigate({to: "/dashboard/budget/annual"}) },
       { label: "Budget Variance", value: "14%", icon: <AlertTriangle className="text-amber-500" />, onClick: () => navigate({to: "/dashboard/budget/annual"}) },
-      { label: "MDAs Reporting", value: "94%", icon: <Building2 className="text-indigo-500" />, onClick: () => navigate({to: "/dashboard/ministries"}) },
-      { label: "Attendance Rate YTD", value: "94.2%", icon: <Activity className="text-gold" /> }
+      { label: "MDAs Reporting", value: "94%", icon: <Building2 className="text-indigo-500" />, onClick: () => navigate({to: "/dashboard/ministries"}) }
     ];
     chartTitle = "Daily Attendance Rate (%)";
     chartActionLink = "/dashboard/staff/recruitment";
@@ -1020,14 +1021,14 @@ function GlobalDashboard({ name, title, profile }: { name: string; title: string
             {kpiCards.map((card, i) => (
               <StatCard key={i} label={card.label} response={card.response} value={card.value} icon={card.icon} onClick={card.onClick} />
             ))}
-            {attendanceStore.isUserEligible(profile.id) && attendanceStore.settings.showDashboardCards && (
+            {/* {attendanceStore.isUserEligible(profile.id) && attendanceStore.settings.showDashboardCards && (
               <StatCard 
                 label="Attendance Rate" 
                 response={stats.att ? { ...stats.att, value: stats.att.value ? `${stats.att.value}%` : null } : null}
                 icon={<Activity className="text-emerald-500" />} 
                 onClick={profile.id === 'retiree' ? () => { setActiveCard({ title: "Details no longer available", value: "Historical", status: "Not Applicable", route: "", source: "Archive", lastUpdated: "N/A" }); setModalOpen(true); } : undefined}
               />
-            )}
+            )} */}
           </div>
         </div>
 

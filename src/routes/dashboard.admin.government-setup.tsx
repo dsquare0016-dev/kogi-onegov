@@ -231,6 +231,18 @@ function GovernmentSetupPage() {
     }
   };
 
+  const handleDeleteOrganization = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this organization? This action is irreversible.")) return;
+    try {
+      const { dbDeleteOrganization } = await import('@/lib/postgres-service');
+      await dbDeleteOrganization({ data: { id } });
+      alert("Organization deleted successfully!");
+      loadAllData();
+    } catch (e: any) {
+      alert(e.message || "Error deleting organization.");
+    }
+  };
+
   const handleEditPillarClick = (p: any) => {
     setEditingItem(p);
     setPillarName(p.name);
@@ -445,6 +457,13 @@ function GovernmentSetupPage() {
                         </span>
                       </div>
                     </div>
+                    <button 
+                      onClick={() => handleDeleteOrganization(o.id)}
+                      className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded transition-colors"
+                      title="Delete Organization"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
                   </div>
                 ))}
               </div>

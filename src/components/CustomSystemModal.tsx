@@ -39,8 +39,8 @@ export function CustomSystemModal() {
   if (type === 'alert') {
     return (
       <div 
-        className="fixed z-[10000] w-full max-w-[420px] rounded-r-xl rounded-l-md bg-card border border-border border-l-4 border-l-red-500 shadow-2xl p-5 pr-10 relative flex flex-col gap-3 text-foreground animate-in slide-in-from-top-4 fade-in duration-300"
-        style={{ top: '84px', right: '24px', left: 'auto', bottom: 'auto' }}
+        className="fixed z-[10000] w-full max-w-[420px] rounded-r-xl rounded-l-md bg-[#0A1142] border border-border border-l-4 border-l-red-500 shadow-2xl p-5 pr-10 flex flex-col gap-3 text-white animate-in slide-in-from-top-4 fade-in duration-300"
+        style={{ top: '24px', right: '24px', left: 'auto', bottom: 'auto' }}
         onKeyDown={handleKeyDown}
       >
         {/* Close icon */}
@@ -54,13 +54,13 @@ export function CustomSystemModal() {
         {/* Modal Header */}
         <div className="flex items-center gap-2.5">
           <AlertCircle className="size-5 text-red-500 shrink-0" />
-          <h3 className="text-xs font-black uppercase tracking-wider text-[#0A1142] dark:text-blue-100">
+          <h3 className="text-xs font-black uppercase tracking-wider text-white">
             NOTIFICATION ALERT
           </h3>
         </div>
 
         {/* Message */}
-        <div className="text-xs leading-relaxed text-foreground/90 font-medium whitespace-pre-wrap">
+        <div className="text-xs leading-relaxed text-white/90 font-medium whitespace-pre-wrap">
           {message}
         </div>
       </div>

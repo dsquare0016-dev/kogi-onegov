@@ -265,7 +265,7 @@ function Login() {
                 value={role}
                 onChange={(e) => {
                   const id = e.target.value;
-                  setRole(id);
+                  setRole(id as any);
                   const r = ROLES.find((x) => x.id === id)!;
                   setEmail(r.demoEmail);
                 }}

@@ -103,43 +103,38 @@ function RecruitmentApplyPage() {
     fetchCampaign();
   }, [slug]);
 
-  // Handle generic document upload using the upload-service
   const handleFileUpload = async (file: File, documentKey: string, campaignDocumentId: string | null = null) => {
     try {
-      const { uploadFileBase64 } = await import('@/lib/upload-service');
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64 = reader.result as string;
-        try {
-          const res = await uploadFileBase64({
-            data: {
-              base64,
-              fileName: file.name,
-              folder: 'recruitment_docs'
-            }
-          });
-          if (res.success) {
-            setUploadedDocuments(prev => {
-              // Remove old entry for same documentKey if exists
-              const filtered = prev.filter(d => d.documentKey !== documentKey);
-              return [...filtered, {
-                campaignDocumentId,
-                documentKey,
-                fileUrl: res.url,
-                fileName: res.fileName,
-                fileSize: res.size,
-                fileType: file.type
-              }];
-            });
-            alert('File uploaded successfully!');
-          }
-        } catch(e: any) {
-          alert(e.message || 'File upload failed');
-        }
-      };
-      reader.readAsDataURL(file);
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size exceeds the 5MB limit.');
+        return;
+      }
+      
+      const { uploadFile } = await import('@/lib/firebase');
+      const uniqueFilename = `${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi, '_')}`;
+      const path = `recruitment_docs/${campaign.id}/${uniqueFilename}`;
+      
+      const publicUrl = await uploadFile(path, file);
+      
+      if (publicUrl) {
+        setUploadedDocuments(prev => {
+          // Remove old entry for same documentKey if exists
+          const filtered = prev.filter(d => d.documentKey !== documentKey);
+          return [...filtered, {
+            campaignDocumentId,
+            documentKey,
+            fileUrl: publicUrl,
+            fileName: uniqueFilename,
+            fileSize: file.size,
+            fileType: file.type
+          }];
+        });
+        alert('File uploaded successfully!');
+      } else {
+        alert('File upload failed or unavailable');
+      }
     } catch(e: any) {
-      alert('Error reading file');
+      alert(e.message || 'Error uploading file');
     }
   };
 

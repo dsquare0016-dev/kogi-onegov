@@ -212,6 +212,7 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
           { to: "/dashboard/retiree", label: "Retiree Dashboard" },
         ]
       },
+      /*
       {
         label: "Attendance", icon: Clock,
         subItems: [
@@ -220,6 +221,7 @@ export const NAV_GROUPS: { label: string; items: NavItemType[] }[] = [
           { to: "/dashboard/admin/attendance-builder", label: "Register Builder" },
         ]
       },
+      */
       {
         label: "Staff Records", icon: FileSignature,
         subItems: [
@@ -1142,28 +1144,27 @@ export function AppShell({ children }: { children: ReactNode }) {
         nextOfKinPhone: settingsNextOfKinPhone
       });
 
-      // Persist to Firestore 'users' collection
-      import('@/lib/firebase').then(async ({ safeGetCollection, safeSetDoc }) => {
-        const usersList = await safeGetCollection<any>('users', []);
-        const matchingUser = usersList.find(u => u.email === current.email || u.staffId === (current as any).staffId);
-        if (matchingUser) {
-          const updatedUser = {
-            ...matchingUser,
-            fullName: settingsName,
-            email: settingsEmail,
-            phone: settingsPhone,
-            phoneNumber: settingsPhone,
-            address: settingsAddress,
-            dateOfBirth: settingsDOB,
-            gender: settingsGender,
-            sex: settingsGender,
-            stateOfOrigin: settingsStateOfOrigin,
-            nextOfKin: settingsNextOfKin,
-            nextOfKinPhone: settingsNextOfKinPhone
-          };
-          await safeSetDoc('users', matchingUser.staffId, updatedUser);
+      // Persist to Postgres database
+      import('@/lib/postgres-service').then(async ({ dbUpdateUserProfile }) => {
+        try {
+          await dbUpdateUserProfile({
+            data: {
+              staffId: (current as any).staffId || current.email, // Passing email as fallback if needed
+              phone: settingsPhone,
+              address: settingsAddress,
+              dateOfBirth: settingsDOB,
+              gender: settingsGender,
+              stateOfOrigin: settingsStateOfOrigin,
+              nextOfKin: settingsNextOfKin,
+              nextOfKinPhone: settingsNextOfKinPhone
+            }
+          });
+        } catch (e) {
+          console.error("Failed to persist profile to db", e);
         }
-      }).catch(err => console.error("Failed to persist profile settings:", err));
+      });
+
+      alert("Settings saved successfully!");
     }
     
     setProfileSaved(true);

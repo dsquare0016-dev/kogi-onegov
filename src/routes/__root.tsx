@@ -19,6 +19,7 @@ import { AlertTriangle, Terminal, ChevronDown, ChevronUp, PowerOff } from "lucid
 import { GduKogiLoader } from "@/components/GduKogiLoader";
 import { CustomSystemModal } from "@/components/CustomSystemModal";
 import { customAlert } from "@/lib/customModal";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -445,6 +446,7 @@ function RootComponent() {
           `}</style>
           <Outlet />
           <CustomSystemModal />
+          <Toaster />
         </>
       )}
     </QueryClientProvider>

@@ -160,6 +160,18 @@ function RecruitmentAdminPage() {
     }
   };
 
+  const handleDeleteCampaign = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!window.confirm('Are you sure you want to delete this campaign? This action is irreversible.')) return;
+    try {
+      const { dbDeleteRecruitmentCampaign } = await import('@/lib/postgres-service');
+      await dbDeleteRecruitmentCampaign({ data: { id } });
+      loadCampaigns();
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete campaign');
+    }
+  };
+
   const handleStatusChange = async (appId: string, newStatus: string) => {
     try {
       
@@ -209,6 +221,8 @@ function RecruitmentAdminPage() {
     }
     setOnboardLoading(false);
   };
+
+  const selectedCampaign = campaigns.find(c => c.id === selectedCampaignId);
 
   useEffect(() => {
     if (selectedCampaign) {
@@ -284,8 +298,6 @@ function RecruitmentAdminPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const selectedCampaign = campaigns.find(c => c.id === selectedCampaignId);
-
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-6 pb-24 text-foreground">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -337,19 +349,28 @@ function RecruitmentAdminPage() {
                   
                   <div className="flex justify-between items-center pt-2 border-t border-border/40 mt-1">
                     <button 
-                      onClick={(e) => { e.stopPropagation(); copyLink(c.public_slug); }}
+                      onClick={(e) => { e.stopPropagation(); copyLink(c.slug || c.public_slug); }}
                       className="inline-flex items-center gap-1 text-[9px] text-[#C5A059] hover:underline font-bold"
                     >
-                      {copiedId === c.public_slug ? <Check className="size-3 text-emerald-500" /> : <Copy className="size-3" />}
+                      {copiedId === (c.slug || c.public_slug) ? <Check className="size-3 text-emerald-500" /> : <Copy className="size-3" />}
                       Copy Link
                     </button>
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); handleToggleCampaignStatus(c.id, c.is_active); }}
-                      className="inline-flex items-center gap-1 text-[9px] text-rose-400 hover:underline font-bold"
-                    >
-                      <Power className="size-3" />
-                      {c.is_active ? 'Close' : 'Open'}
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        onClick={(e) => handleDeleteCampaign(c.id, e)}
+                        className="inline-flex items-center gap-1 text-[9px] text-rose-500 hover:text-rose-400 hover:underline font-bold"
+                      >
+                        <Trash2 className="size-3" />
+                        Delete
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleToggleCampaignStatus(c.id, c.is_active); }}
+                        className="inline-flex items-center gap-1 text-[9px] text-rose-400 hover:underline font-bold"
+                      >
+                        <Power className="size-3" />
+                        {c.is_active ? 'Close' : 'Open'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

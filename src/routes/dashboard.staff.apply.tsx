@@ -7,22 +7,15 @@ import { useApplicationsStore, type ApplicationDocument } from '@/lib/applicatio
 import { uploadFile } from '@/lib/firebase';
 import { FileText, UploadCloud, Trash2, Send, CheckCircle, Clock, AlertCircle, FileSpreadsheet, FileImage } from 'lucide-react';
 
+import { getOrganizationsList } from '@/lib/postgres-service';
+
 export const Route = createFileRoute('/dashboard/staff/apply')({
+  loader: async () => {
+    const mdas = await getOrganizationsList();
+    return { mdas };
+  },
   component: SelfServiceApplyPage,
 });
-
-// Destination offices matching the MDAs registered
-const TARGET_OFFICES = [
-  'Civil Service Commission',
-  'Office of the Head of Service',
-  'Ministry of Finance',
-  'Ministry of Education',
-  'Ministry of Health',
-  'Ministry of Works & Housing',
-  'Ministry of Agriculture',
-  'Ministry of Justice',
-  'Governance Delivery Unit',
-];
 
 const LEAVE_TYPES = [
   'Annual Leave',
@@ -36,6 +29,7 @@ const LEAVE_TYPES = [
 ];
 
 function SelfServiceApplyPage() {
+  const { mdas } = Route.useLoaderData();
   const session = getSession();
   const { records: nominalRecords, loadRecords } = useNominalRollStore();
   const { applications, loadApplications, submitApplication, isLoading: storeLoading } = useApplicationsStore();
@@ -46,7 +40,7 @@ function SelfServiceApplyPage() {
 
   // Form states
   const [appType, setAppType] = useState<'Leave' | 'Transfer' | 'Promotion'>('Leave');
-  const [targetOffice, setTargetOffice] = useState(TARGET_OFFICES[0]);
+  const [targetOffice, setTargetOffice] = useState(mdas?.[0]?.name || 'Ministry of Finance');
   
   // Leave states
   const [leaveType, setLeaveType] = useState(LEAVE_TYPES[0]);
@@ -54,7 +48,7 @@ function SelfServiceApplyPage() {
   const [leaveEnd, setLeaveEnd] = useState('');
 
   // Transfer states
-  const [targetMda, setTargetMda] = useState(TARGET_OFFICES[0]);
+  const [targetMda, setTargetMda] = useState(mdas?.[0]?.name || 'Ministry of Finance');
   const [targetDept, setTargetDept] = useState('');
   const [transferReason, setTransferReason] = useState('');
 
@@ -256,14 +250,14 @@ function SelfServiceApplyPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Destination MDA Selection */}
                   <div className="space-y-1.5 col-span-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Submit to Office / MDA Authority</label>
-                    <select
-                      value={targetOffice}
-                      onChange={e => setTargetOffice(e.target.value)}
-                      className="w-full p-2.5 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary font-semibold"
+                    <label className="text-xs font-bold text-muted-foreground uppercase">Target MDA / Organization</label>
+                    <select 
+                      value={targetMda} 
+                      onChange={e => setTargetMda(e.target.value)}
+                      className="w-full p-2.5 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary font-bold shadow-sm"
                     >
-                      {TARGET_OFFICES.map(office => (
-                        <option key={office} value={office}>{office}</option>
+                      {mdas?.map((org: any) => (
+                        <option key={org.id} value={org.name}>{org.name}</option>
                       ))}
                     </select>
                     <p className="text-[10px] text-muted-foreground">The request will be routed directly to the selected administration desk for evaluation.</p>
