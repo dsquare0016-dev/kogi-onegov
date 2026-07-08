@@ -79,6 +79,7 @@ function RecruitmentApplyPage() {
     positions: [],
     documents: [],
     sections: [],
+    certifications: [],
     requireExperience: true,
     requireCerts: true,
   });
@@ -90,11 +91,16 @@ function RecruitmentApplyPage() {
         const res = (await dbGetRecruitmentCampaignBySlug({ data: { slug } })) as any;
         setCampaign(res);
         if (res) {
+          // Process certifications from documents table or string config
+          const certString = res.documents?.filter((d: any) => d.document_key === 'certification').map((d: any) => d.document_name).join(', ') || '';
+          const certList = certString.split(',').map((s: string) => s.trim()).filter(Boolean);
+          
           setConfig({
             rules: res.eligibility_rules || 'Please ensure all credentials are valid and uploaded professionally.',
             positions: res.positions || [],
             documents: res.documents || [],
             sections: res.sections || [],
+            certifications: certList,
             requireExperience: res.sections?.find((s: any) => s.section_key === 'experience')?.is_enabled ?? true,
             requireCerts: res.sections?.find((s: any) => s.section_key === 'certification')?.is_enabled ?? true,
           });

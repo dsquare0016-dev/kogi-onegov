@@ -2,7 +2,7 @@ import { dbGetRecruitmentCampaigns, dbGetRecruitmentApplications, dbGetWorkforce
 import { createFileRoute } from '@tanstack/react-router';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
-import { Power, Users, Save, Plus, X, Briefcase, FileText, Link2, Copy, Check, CheckCircle2, ChevronRight, UserPlus, RefreshCw, Loader2, Trash2 } from 'lucide-react';
+import { Power, Users, Save, Plus, X, Briefcase, FileText, Link2, Copy, Check, CheckCircle2, ChevronRight, UserPlus, RefreshCw, Loader2, Trash2, Edit2 } from 'lucide-react';
 import { getSession } from '@/lib/auth';
 
 export const Route = createFileRoute('/dashboard/staff/recruitment')({
@@ -357,6 +357,13 @@ function RecruitmentAdminPage() {
                     </button>
                     <div className="flex items-center gap-3">
                       <button 
+                        onClick={(e) => { e.stopPropagation(); setSelectedCampaignId(c.id); setTimeout(() => document.getElementById('form-config-section')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
+                        className="inline-flex items-center gap-1 text-[9px] text-blue-500 hover:text-blue-400 hover:underline font-bold"
+                      >
+                        <Edit2 className="size-3" />
+                        Edit Form
+                      </button>
+                      <button 
                         onClick={(e) => handleDeleteCampaign(c.id, e)}
                         className="inline-flex items-center gap-1 text-[9px] text-rose-500 hover:text-rose-400 hover:underline font-bold"
                       >
@@ -486,7 +493,7 @@ function RecruitmentAdminPage() {
           
           {/* 3. Form Settings & Requirements Builder */}
           {selectedCampaign && (
-            <Card className="border-border/60 bg-card/60 backdrop-blur-md mt-6">
+            <Card id="form-config-section" className="border-border/60 bg-card/60 backdrop-blur-md mt-6">
               <CardHeader className="border-b border-border/50 bg-muted/10 pb-4">
                 <CardTitle className="text-sm font-black text-primary uppercase flex items-center gap-2">
                   <Briefcase className="size-5 text-[#C5A059]" /> Application Form Configuration
